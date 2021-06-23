@@ -68,15 +68,15 @@
         <div class="content markdown">
             <h1 id="感觉自己之前写的文章理解还是不够，所以又来写"><a href="#感觉自己之前写的文章理解还是不够，所以又来写" class="headerlink" title="感觉自己之前写的文章理解还是不够，所以又来写"></a>感觉自己之前写的文章理解还是不够，所以又来写</h1><p>如果只是单纯的复现很快就会忘掉，所以需要自己多靠自己再来复现，这次是做n1book上的哪个thinkphp5.1.</p>
 <p>找入口能够找到windows.php</p>
-<p><img src="thinkphp5.1/image-20210504130710627.png" alt="image-20210504130710627"></p>
+<p><img src="image-20210504130710627.png" alt="image-20210504130710627"></p>
 <p>找到removeFile，看</p>
-<p><img src="thinkphp5.1/image-20210504130931338.png" alt="image-20210504130931338"></p>
+<p><img src="image-20210504130931338.png" alt="image-20210504130931338"></p>
 <p>然后发现任意文件删除，然而我们不仅仅想要做到这个，想想file_exists能够做什么呢？对吧，还可以找toString来继续看，挨个找（这里我只能说提供思路给大家，因为找这个是相当的繁琐和疲惫的事情，如果按照网上的WP的话就很快，但是往往找POP链就是很累），最终能够锁定Conversion.php</p>
-<p><img src="thinkphp5.1/image-20210504131141168.png" alt="image-20210504131141168"></p>
+<p><img src="image-20210504131141168.png" alt="image-20210504131141168"></p>
 <p>跟过去</p>
-<p><img src="thinkphp5.1/image-20210504131156216.png" alt="image-20210504131156216"></p>
+<p><img src="image-20210504131156216.png" alt="image-20210504131156216"></p>
 <p>再跟过去看toArray。将暂时没用的代码折叠掉，我们发现了一个$relation-&gt;visiible</p>
-<p><img src="thinkphp5.1/image-20210504131357627.png" alt="image-20210504131357627"></p>
+<p><img src="image-20210504131357627.png" alt="image-20210504131357627"></p>
 <p>分析这段代码做的事情：</p>
 <ul>
 <li>首先重点看看是否可控，首先$name是可控的，$name来自于$this-&gt;append的数组遍历，而该参数我们可以控制，故完全可控</li>
@@ -84,10 +84,10 @@
 <li>满足这些条件就可以进入$relation-&gt;visible($name),而name也可以控制，name此时传进去的是一个数组，所以我们全局搜索visible方法，如果不行就找call方法</li>
 </ul>
 <p>这里先举出其他call方法为什么不用，例如我们可以先找到一个Cache.php</p>
-<p><img src="thinkphp5.1/image-20210504132633411.png" alt="image-20210504132633411"></p>
+<p><img src="image-20210504132633411.png" alt="image-20210504132633411"></p>
 <p>这里的第一个参数就不可控，其他的很多call函数也是类似</p>
 <p>最终我们可以在Request.php下找到</p>
-<p><img src="thinkphp5.1/image-20210504132522167.png" alt="image-20210504132522167"></p>
+<p><img src="image-20210504132522167.png" alt="image-20210504132522167"></p>
 <p>hook完全可控，那么最终我们就可以执行system命令了(原本我是这样想的，结果这就尼玛是前面的一小部分，因为这个该死的array_unshift)，让这个链子长了一倍多！</p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->

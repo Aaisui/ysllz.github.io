@@ -72,7 +72,7 @@
 
 <p>首先总结读。</p>
 <h1 id="读"><a href="#读" class="headerlink" title="读"></a>读</h1><p>重点就是php://filter 流。</p>
-<p><img src="%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%AF%BB%E5%86%99/image-20210516201926891.png" alt="image-20210516201926891"></p>
+<p><img src="image-20210516201926891.png" alt="image-20210516201926891"></p>
 <p>官方的文章中提到的三个可用函数：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">readfle</span><br><span class="line">file()</span><br><span class="line">file_put_contents</span><br><span class="line">file_get_contents</span><br></pre></td></tr></table></figure>
 
@@ -116,10 +116,10 @@
 
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$a = $_GET[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($a))&#123;</span><br><span class="line">    <span class="keyword">include</span> ($a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%AF%BB%E5%86%99/image-20210516202910770.png" alt="image-20210516202910770"></p>
+<p><img src="image-20210516202910770.png" alt="image-20210516202910770"></p>
 <p>利用伪协议流还是可以读取到的</p>
 <p>但如果直接读取就会因为被解析了exit语句而无法读取到后面的部分。</p>
-<p><img src="%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%AF%BB%E5%86%99/image-20210516203051751.png" alt="image-20210516203051751"></p>
+<p><img src="image-20210516203051751.png" alt="image-20210516203051751"></p>
 <h1 id="写"><a href="#写" class="headerlink" title="写"></a>写</h1><p>读一般不作为考点，只做来辅助，前段时间，呃，20年的时候我记得几个比赛都出了利用php伪协议流来进行写入文件</p>
 <p>首先，有如下函数可以利用到PHP的协议流进行实战操作</p>
 <ul>
@@ -141,9 +141,9 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost&#x2F;5.php?1&#x3D;php:&#x2F;&#x2F;filter&#x2F;write&#x3D;convert.base64-decode&#x2F;resource&#x3D;1.php&amp;0&#x3D;PD9waHAgcGhwaW5mbygpOw&#x3D;&#x3D;</span><br></pre></td></tr></table></figure>
 
 <p>得到结果：</p>
-<p><img src="%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%AF%BB%E5%86%99/image-20210516204853922.png" alt="image-20210516204853922"></p>
+<p><img src="image-20210516204853922.png" alt="image-20210516204853922"></p>
 <p>除此之外，php还有很多过滤流的格式：</p>
-<p><img src="%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%AF%BB%E5%86%99/image-20210516204955519.png" alt="image-20210516204955519"></p>
+<p><img src="image-20210516204955519.png" alt="image-20210516204955519"></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/* 这简单等同于：</span></span><br><span class="line"><span class="comment">  readfile(&quot;http://www.example.com&quot;);</span></span><br><span class="line"><span class="comment">  实际上没有指定过滤器 */</span></span><br><span class="line"></span><br><span class="line">readfile(<span class="string">&quot;php://filter/resource=http://www.example.com&quot;</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>其他的函数也是大同小异的。</p>
@@ -167,7 +167,7 @@
 <p>大写写入的内容</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost&#x2F;5.php?0&#x3D;php:&#x2F;&#x2F;filter&#x2F;string.toupper&#x2F;resource&#x3D;1.php</span><br></pre></td></tr></table></figure>
 
-<p><img src="%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%AF%BB%E5%86%99/image-20210516205945077.png" alt="image-20210516205945077"></p>
+<p><img src="image-20210516205945077.png" alt="image-20210516205945077"></p>
 <h3 id="string-tolower"><a href="#string-tolower" class="headerlink" title="string.tolower"></a>string.tolower</h3><p><code>string.tolower</code>（自 PHP 5.0.0 起）使用此过滤器等同于用 <a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.strtolower.php">strtolower()</a>函数处理所有的流数据</p>
 <p>同样，小写写入的内容</p>
 <p>官方单独列出来的一个过滤器：</p>

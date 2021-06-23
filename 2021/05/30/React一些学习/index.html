@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>React一些学习 - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="说实话明年我真的不想做前端了，又累还要被吐槽简单。
+这次自己的前端用到的技术栈还好，
+路由管理： umi
+前端展示： antd
+记录一下自己遇见的知识：
+我觉得最主要的就是hook，如何使用好hoo,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">React一些学习</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">React一些学习</h1>
+        <div class="stuff">
+            <span>五月 30, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Javascript/" rel="tag">Javascript</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p>说实话明年我真的不想做前端了，又累还要被吐槽简单。</p>
+<p>这次自己的前端用到的技术栈还好，</p>
+<p>路由管理： umi</p>
+<p>前端展示： antd</p>
+<p>记录一下自己遇见的知识：</p>
+<p>我觉得最主要的就是hook，如何使用好hook是很重要的。说几个自己常用的：</p>
+<h1 id="useState"><a href="#useState" class="headerlink" title="useState"></a>useState</h1><p>常见形式：</p>
+<p><strong>const [data, setData] = useState([]);</strong></p>
+<p>这个可太好用了，意思是定义了data，并直接定义了一个set方法，并且规定了State的返回期待为一个数组。</p>
+<p>该hook一般搭配useEffect 来使用。</p>
+<h1 id="useEffect"><a href="#useEffect" class="headerlink" title="useEffect"></a>useEffect</h1><p>常用情况：</p>
+<p>​    基本上只要用到了异步，轮询你都必须接触到这个hook。具体例子如下：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">useEffect(</span><br><span class="line">        ()=&gt;&#123;</span><br><span class="line">            fetch(<span class="string">&#x27;http://154.8.144.57:8000/api/log/&#x27;</span>)</span><br><span class="line">            .then(<span class="function">(<span class="params">response</span>) =&gt;</span> response.json())</span><br><span class="line">            .then(<span class="function">(<span class="params">json</span>) =&gt;</span> setData(json.logs))</span><br><span class="line">            .catch(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">&#x27;fetch data failed&#x27;</span>, error);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;,[]);</span><br></pre></td></tr></table></figure>
+
+<p>它可以帮助你在初始化页面的时候进行一次数据的采集，如果第二个参数为你的期望值，如果与期望值不同的话就会重新尝试获取数据，换句话说它可以做到两个事情</p>
+<ul>
+<li>开局替你获取数据</li>
+<li>使用轮询的方式刷新数据</li>
+</ul>
+<h1 id="箭头函数"><a href="#箭头函数" class="headerlink" title="箭头函数"></a>箭头函数</h1><p>一开始的时候我不会写，所以很多时候别人的工程代码也很难看懂，但是当我明白之后发现还是相当好用的，他最大的好处就是让你从this这个扯淡的东西摆脱出来了。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;Menu.Item key=<span class="string">&quot;1&quot;</span> onClick=&#123;<span class="function">()=&gt;</span> history.push(<span class="string">&#x27;/admin/unitControl&#x27;</span>)&#125; &gt;主机管理&lt;/Menu.Item&gt;</span><br><span class="line">&lt;Menu.Item key=<span class="string">&quot;2&quot;</span> onClick=&#123;<span class="function">() =&gt;</span> history.push(<span class="string">&#x27;/admin/processControl&#x27;</span>)&#125; &gt;进程管理&lt;/Menu.Item&gt;</span><br><span class="line">&lt;Menu.Item key=<span class="string">&quot;3&quot;</span> onClick=&#123;<span class="function">() =&gt;</span> history.push(<span class="string">&#x27;/admin/portControl&#x27;</span>)&#125; &gt;端口管理&lt;/Menu.Item&gt;</span><br><span class="line">&lt;Menu.Item key=<span class="string">&quot;4&quot;</span> onClick=&#123;<span class="function">()=&gt;</span>history.push(<span class="string">&#x27;/admin/logControl&#x27;</span>)&#125; &gt;历史日志监控&lt;/Menu.Item&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="image-20210530195849041.png" alt="image-20210530195849041"></p>
+<p>附上官方的url：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;developer.mozilla.org&#x2F;zh-CN&#x2F;docs&#x2F;Web&#x2F;JavaScript&#x2F;Reference&#x2F;Functions&#x2F;Arrow_functions</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions#%E6%B2%A1%E6%9C%89%E5%8D%95%E7%8B%AC%E7%9A%84this">没有单独的<code>this</code></a></p>
+<p>在箭头函数出现之前，每一个新函数根据它是被如何调用的来定义这个函数的this值：</p>
+<ul>
+<li>如果是该函数是一个构造函数，this指针指向一个新的对象</li>
+<li>在严格模式下的函数调用下，this指向undefined</li>
+<li>如果是该函数是一个对象的方法，则它的this指针指向这个对象</li>
+<li>等等</li>
+</ul>
+<p><code>This</code>被证明是令人厌烦的面向对象风格的编程。(这句话太对了，如果你项目工程一大this就很扯)</p>
+<p>其他感觉没有啥了，react的官网的文档啊，真的是所有文档的典范，写的太清晰了。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#useState"><span class="toc-number">1.</span> <span class="toc-text">useState</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#useEffect"><span class="toc-number">2.</span> <span class="toc-text">useEffect</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">箭头函数</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

