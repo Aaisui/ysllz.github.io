@@ -4932,7 +4932,7 @@
 
 
 
-<p><img src="%E6%9C%80%E8%BF%91%E7%9A%84node%E7%9A%84%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20210625203828877.png" alt="image-20210625203828877"></p>
+<p><img src="image-20210625203828877.png" alt="image-20210625203828877"></p>
 <h1 id="8-prisma"><a href="#8-prisma" class="headerlink" title="8.prisma"></a>8.prisma</h1><p>这是一个用于管理数据库连接的第三方库</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Data source</span></span><br><span class="line">datasource db &#123;</span><br><span class="line">  provider = <span class="string">&quot;postgresql&quot;</span></span><br><span class="line">  url      = env(<span class="string">&quot;DATABASE_URL&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Generator</span></span><br><span class="line">generator client &#123;</span><br><span class="line">  provider = <span class="string">&quot;prisma-client-js&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Data model</span></span><br><span class="line">model Post &#123;</span><br><span class="line">  id        Int     @id @<span class="keyword">default</span>(autoincrement())</span><br><span class="line">  title     <span class="built_in">String</span></span><br><span class="line">  content   <span class="built_in">String</span>?</span><br><span class="line">  published <span class="built_in">Boolean</span> @<span class="keyword">default</span>(<span class="literal">false</span>)</span><br><span class="line">  author    User?   @relation(fields:  [authorId], <span class="attr">references</span>: [id])</span><br><span class="line">  authorId  Int?</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">model User &#123;</span><br><span class="line">  id    Int     @id @<span class="keyword">default</span>(autoincrement())</span><br><span class="line">  email <span class="built_in">String</span>  @unique</span><br><span class="line">  name  <span class="built_in">String</span>?</span><br><span class="line">  posts Post[]</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -4968,6 +4968,11 @@
 <p>直接将用户的取值进行渲染，但是用户的输入可以是数组，所以</p>
 <p><img src="image-20210627175144942.png" alt="image-20210627175144942"></p>
 <p>即可任意文件读取并进行RCE</p>
+<h2 id="官方修复："><a href="#官方修复：" class="headerlink" title="官方修复："></a>官方修复：</h2><p>在新版本当中官方对hbs的渲染做出了限制（这让我头大了很久</p>
+<p><img src="image-20210627175610188.png" alt="image-20210627175610188"></p>
+<p>新版本中，不再会直接进行渲染了，而是会check用户的输入，如果渲染的目标为对象，则会抛出异常。</p>
+<p><img src="image-20210627175450858.png" alt="image-20210627175450858"></p>
+<p>这里还对异常信息的抛出做出了 check，必须是字符串才可以。。</p>
 ]]></content>
       <tags>
         <tag>原型链污染</tag>
